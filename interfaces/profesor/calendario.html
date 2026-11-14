@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Académico - Profesor</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .calendario-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 25px;
+        }
+
+        .calendario-mes-container {
+            background: var(--bg-card);
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .calendario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 25px;
+            background: var(--bg-table-hover);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+            .calendario-header h2 {
+                font-size: 18px;
+                margin: 0;
+                font-weight: 600;
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .calendario-header .nav-buttons {
+                display: flex;
+                gap: 8px;
+            }
+
+                .calendario-header .nav-buttons button {
+                    background: var(--bg-input);
+                    color: var(--text-primary);
+                    padding: 8px 14px;
+                    border-radius: 8px;
+                    border: 1px solid var(--border-color);
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    font-size: 13px;
+                    font-weight: 600;
+                }
+
+                    .calendario-header .nav-buttons button:hover {
+                        background: var(--border-focus);
+                        color: white;
+                        border-color: var(--border-focus);
+                    }
+
+        .calendario-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            padding: 15px;
+            background: var(--border-color);
+        }
+
+            .calendario-grid .header-dia {
+                background: var(--bg-card);
+                padding: 10px;
+                text-align: center;
+                font-weight: 600;
+                font-size: 11px;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .calendario-grid .dia {
+                background: var(--bg-card);
+                padding: 8px 6px;
+                min-height: 85px;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+                position: relative;
+                cursor: pointer;
+            }
+
+                .calendario-grid .dia:hover {
+                    background: var(--bg-table-hover);
+                    z-index: 5;
+                }
+
+                .calendario-grid .dia .numero {
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                }
+
+                .calendario-grid .dia.feriado .numero {
+                    color: #FF3B30;
+                }
+
+                .calendario-grid .dia.hoy {
+                    border: 2px solid var(--border-focus);
+                }
+
+                .calendario-grid .dia.vacio {
+                    background: transparent;
+                    min-height: 0;
+                    cursor: default;
+                }
+
+                .calendario-grid .dia .evento-mini {
+                    font-size: 10px;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    color: white;
+                    margin-top: 3px;
+                    display: block;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    cursor: pointer;
+                    font-weight: 500;
+                }
+
+                .calendario-grid .dia .tooltip {
+                    display: none;
+                    position: absolute;
+                    bottom: calc(100% + 8px);
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: var(--bg-card);
+                    color: var(--text-primary);
+                    padding: 12px 16px;
+                    border-radius: 12px;
+                    font-size: 12px;
+                    min-width: 200px;
+                    max-width: 280px;
+                    z-index: 100;
+                    box-shadow: var(--shadow-lg);
+                    border: 1px solid var(--border-color);
+                }
+
+                    .calendario-grid .dia .evento-mini:hover + .tooltip, .calendario-grid .dia .tooltip:hover {
+                        display: block;
+                    }
+
+                    .calendario-grid .dia .tooltip .titulo {
+                        font-weight: 600;
+                        font-size: 13px;
+                        margin-bottom: 4px;
+                        color: var(--text-primary);
+                    }
+
+                    .calendario-grid .dia .tooltip .desc {
+                        font-size: 11px;
+                        color: var(--text-secondary);
+                        margin: 4px 0;
+                        max-height: 60px;
+                        overflow-y: auto;
+                    }
+
+                    .calendario-grid .dia .tooltip .fecha {
+                        font-size: 10px;
+                        color: var(--text-muted);
+                        margin-top: 4px;
+                    }
+
+        .eventos-lateral {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+            .eventos-lateral .card {
+                background: var(--bg-card);
+                padding: 25px;
+                border-radius: var(--radio-card);
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--border-color);
+            }
+
+                .eventos-lateral .card h3 {
+                    margin: 0 0 16px 0;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+        .info-box {
+            background: rgba(90, 200, 250, 0.1);
+            padding: 15px 18px;
+            border-radius: 12px;
+            border-left: 4px solid #5AC8FA;
+            color: var(--text-primary);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .lista-eventos {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .evento-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            background: var(--bg-table-hover);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--border-focus);
+        }
+
+            .evento-item .color-badge {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                margin-right: 10px;
+                flex-shrink: 0;
+            }
+
+            .evento-item .info {
+                flex: 1;
+                min-width: 0;
+            }
+
+                .evento-item .info .titulo {
+                    font-weight: 600;
+                    font-size: 13px;
+                    color: var(--text-primary);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .evento-item .info .fecha {
+                    font-size: 11px;
+                    color: var(--text-secondary);
+                    margin-top: 2px;
+                }
+
+        .modal-dia {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+            .modal-dia.active {
+                display: flex;
+            }
+
+        .modal-dia-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: var(--radio-card);
+            max-width: 450px;
+            width: 92%;
+            box-shadow: var(--shadow-xl);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+            .modal-dia-content .header-modal {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+                .modal-dia-content .header-modal h3 {
+                    margin: 0;
+                    color: var(--text-primary);
+                    font-size: 18px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .modal-dia-content .header-modal .cerrar-modal {
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    color: var(--text-secondary);
+                    cursor: pointer;
+                }
+
+            .modal-dia-content .info-dia {
+                margin-bottom: 15px;
+                padding: 12px 14px;
+                background: var(--bg-table-hover);
+                border-radius: 10px;
+                border: 1px solid var(--border-color);
+            }
+
+                .modal-dia-content .info-dia .fecha-dia {
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    font-size: 14px;
+                }
+
+                .modal-dia-content .info-dia .eventos-dia-info {
+                    margin-top: 8px;
+                    font-size: 13px;
+                    color: var(--text-secondary);
+                }
+
+                    .modal-dia-content .info-dia .eventos-dia-info .evento-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 6px 0;
+                        border-bottom: 1px solid var(--border-color);
+                    }
+
+                    .modal-dia-content .info-dia .eventos-dia-info .color-dot {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        flex-shrink: 0;
+                    }
+
+        @media (max-width: 1024px) {
+            .calendario-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li>
+                    <div class="toggle-submenu" onclick="toggleSubmenu(this)">
+                        <span><i class='bx bx-book-open'></i> Mis Secciones</span>
+                        <span class="arrow"><i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <ul class="submenu" id="submenu-secciones"></ul>
+                </li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="reportes.html"><i class='bx bx-bar-chart-alt-2'></i> Reportes</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="calendario.html" class="active"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Calendario Académico</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Consulta feriados, asuetos y días lectivos de la institución</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="calendario-wrapper">
+                <div class="calendario-mes-container">
+                    <div class="calendario-header">
+                        <h2 id="titulo-mes"><i class='bx bx-calendar-event' style="color: var(--border-focus);"></i> Octubre 2026</h2>
+                        <div class="nav-buttons">
+                            <button type="button" onclick="cambiarMes(-1)" aria-label="Mes anterior" title="Mes anterior"><i class='bx bx-chevron-left' aria-hidden="true"></i></button>
+                            <button onclick="irHoy()">Hoy</button>
+                            <button type="button" onclick="cambiarMes(1)" aria-label="Mes siguiente" title="Mes siguiente"><i class='bx bx-chevron-right' aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="calendario-grid" id="grid-calendario"></div>
+                </div>
+
+                <div class="eventos-lateral">
+                    <div class="card">
+                        <h3><i class='bx bx-pin' style="color: var(--border-focus);"></i> Días Libres y Feriados</h3>
+                        <div class="lista-eventos" id="lista-eventos"></div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class='bx bx-info-circle' style="color: var(--border-focus);"></i> Información Útil</h3>
+                        <div class="info-box">
+                            <p><strong>Nota para Docentes:</strong></p>
+                            <p style="margin-top:6px;">Los feriados y asuetos registrados en este calendario exoneran automáticamente el registro de asistencia estudiantil para la fecha señalada.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modalDia" class="modal-dia">
+        <div class="modal-dia-content">
+            <div class="header-modal">
+                <h3 id="modalTituloDia"><i class='bx bx-calendar-event' style="color: var(--border-focus);"></i> Eventos del día</h3>
+                <button type="button" class="cerrar-modal" onclick="cerrarModalDia()" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="info-dia">
+                <div class="fecha-dia" id="modalFechaDia">Fecha</div>
+                <div class="eventos-dia-info" id="modalEventosDia"></div>
+            </div>
+            <div id="modalAccionesDia" style="margin-top:15px;"></div>
+        </div>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/calendario.js"></script>
+</body>
+</html>

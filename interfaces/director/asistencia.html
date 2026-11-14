@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .panel-asistencia {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        .filtros-simple {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+            .filtros-simple .campo {
+                flex: 1;
+                min-width: 200px;
+            }
+
+            .filtros-simple label {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 6px;
+                font-size: 13px;
+                color: var(--text-primary);
+            }
+
+            .filtros-simple input, .filtros-simple select {
+                width: 100%;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                background: var(--bg-input);
+                color: var(--text-primary);
+            }
+
+        .panel-clases { margin-bottom: 28px; }
+        .panel-clases-cab {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            gap: 16px; flex-wrap: wrap; margin-bottom: 12px;
+        }
+        .panel-clases h2, .titulo-registros {
+            margin: 0; font-size: 17px; font-weight: 700; color: var(--text-primary);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .titulo-registros { margin: 0 0 12px; }
+        .panel-clases-resumen { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
+        .panel-clases-dia label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--text-primary); }
+        .panel-clases-dia input {
+            padding: 9px 10px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--bg-input); color: var(--text-primary);
+        }
+        .chip-clase {
+            display: inline-block; padding: 3px 10px; border-radius: 999px;
+            font-size: 12px; font-weight: 700; white-space: nowrap;
+        }
+        .chip-clase.con_lista   { background: rgba(48,209,88,0.14);  color: #1f8a3c; }
+        .chip-clase.en_curso    { background: rgba(10,132,255,0.14); color: #0a64c8; }
+        .chip-clase.por_empezar,
+        .chip-clase.programada  { background: rgba(142,142,147,0.16); color: var(--text-secondary); }
+        .chip-clase.sin_lista   { background: rgba(255,159,10,0.18); color: #a35f00; }
+        .chip-clase.no_dada     { background: rgba(255,69,58,0.13);  color: #c4271d; }
+        .chip-clase.feriado     { background: rgba(142,142,147,0.16); color: var(--text-secondary); }
+        body.dark-mode .chip-clase.con_lista { color: #30d158; }
+        body.dark-mode .chip-clase.en_curso  { color: #64a8ff; }
+        body.dark-mode .chip-clase.sin_lista { color: #ffb340; }
+        body.dark-mode .chip-clase.no_dada   { color: #ff6961; }
+        .clase-sub { display: block; font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+        .clase-sub i { vertical-align: -2px; }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html" class="active"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Control de Asistencia</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Vista general y gestión de asistencia de estudiantes</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="panel-asistencia">
+                <div class="filtros-simple">
+                    <div class="campo">
+                        <label for="fecha"><i class='bx bx-calendar'></i> Fecha de Consulta</label>
+                        <input type="date" id="fecha">
+                    </div>
+                    <div class="campo">
+                        <label for="curso"><i class='bx bx-layer'></i> Filtrar por Sección</label>
+                        <select id="curso">
+                            <option value="">Todas las secciones</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="busqueda"><i class='bx bx-search'></i> Buscar Estudiante</label>
+                        <input type="text" id="busqueda" placeholder="Nombre o cédula...">
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="limpiarFiltros()" style="padding: 10px 20px; height: 42px;">
+                            <i class='bx bx-reset'></i> Limpiar
+                        </button>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="btn btn-secondary" onclick="exportarDia('pdf')" style="padding: 10px 16px; height: 42px;" title="Lista del día por sección y materia">
+                            <i class='bx bxs-file-pdf'></i> PDF
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="exportarDia('excel')" style="padding: 10px 16px; height: 42px;" title="Lista del día por sección y materia">
+                            <i class='bx bx-spreadsheet'></i> Excel
+                        </button>
+                    </div>
+                </div>
+
+                <section id="panel-clases" class="panel-clases" aria-labelledby="titulo-clases">
+                    <div class="panel-clases-cab">
+                        <div>
+                            <h2 id="titulo-clases"><i class='bx bx-chalkboard'></i> Clases del día</h2>
+                            <p id="resumen-clases" class="panel-clases-resumen">Cargando...</p>
+                        </div>
+                        <div class="panel-clases-dia">
+                            <label for="fecha-clases">Día</label>
+                            <input type="date" id="fecha-clases" title="Puede elegir un día que viene para dejar listo el suplente">
+                        </div>
+                    </div>
+                    <div class="tabla-wrapper">
+                        <table class="table tabla-clases">
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Sección</th>
+                                    <th>Materia</th>
+                                    <th>Profesor</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-clases"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <h2 class="titulo-registros"><i class='bx bx-list-check'></i> Registros de estudiantes</h2>
+                <div class="tabla-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Estudiante</th>
+                                <th>Cédula</th>
+                                <th>Sección</th>
+                                <th>Materia</th>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/exportar.js"></script>
+    <script src="../../js/lista_export.js"></script>
+    <script src="../../js/asistencia_director.js"></script>
+</body>
+</html>

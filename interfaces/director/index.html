@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Director - Sistema de Asistencia</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        /* =========================================
+           FIX PARA EL SCROLL HORIZONTAL (PANTALLA ROTA)
+           ========================================= */
+        html, body {
+            overflow-x: hidden !important; /* Evita la barra horizontal */
+            margin: 0;
+            padding: 0;
+        }
+
+        .layout {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Aseguramos que el header no empuje el ancho */
+        header {
+            flex-wrap: wrap;
+            box-sizing: border-box;
+        }
+
+        /* =========================================
+           ESTILOS DEL MODAL DE PRE-REGISTRO
+           ========================================= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-lg);
+            width: 90%; /* Adaptable a móviles */
+            max-width: 400px;
+            max-height: 90vh; /* Evita que se salga de la pantalla */
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+            .modal-content h3 {
+                margin-top: 0;
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .modal-content .form-group {
+                margin-bottom: 15px;
+            }
+
+                .modal-content .form-group label {
+                    display: block;
+                    margin-bottom: 5px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                }
+
+                .modal-content .form-group input, .modal-content .form-group select {
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    background: var(--bg-input);
+                    color: var(--text-primary);
+                    box-sizing: border-box;
+                }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Estilos para el mensaje de alerta dentro del modal */
+        .modal-mensaje {
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+            .modal-mensaje.error {
+                display: block;
+                background: rgba(255, 59, 48, 0.1);
+                color: #FF3B30;
+                border: 1px solid #FF3B30;
+            }
+
+            .modal-mensaje.exito {
+                display: block;
+                background: rgba(52, 199, 89, 0.1);
+                color: #34C759;
+                border: 1px solid #34C759;
+            }
+        .clases-hoy-cab { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .clases-hoy-cab h2 { margin: 0; }
+        .btn-clases-hoy { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 8px 14px; }
+        .clases-hoy-resumen { margin: 8px 0 4px; font-size: 14px; color: var(--text-secondary); }
+        .clase-pendiente {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            padding: 10px 0; border-top: 1px solid var(--border-color); font-size: 14px;
+        }
+        .clase-pendiente .det { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+        .chip-pend { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .chip-pend.en_curso { background: rgba(10,132,255,0.14); color: #0a64c8; }
+        .chip-pend.sin_lista { background: rgba(255,159,10,0.18); color: #a35f00; }
+        body.dark-mode .chip-pend.en_curso { color: #64a8ff; }
+        body.dark-mode .chip-pend.sin_lista { color: #ffb340; }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html" class="active"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Panel de Control</h1>
+                        <p id="saludo-director" style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Bienvenido, Director General</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(0, 122, 255, 0.1); color: #007AFF;"><i class='bx bxs-graduation'></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-estudiantes">0</h3>
+                        <p>Estudiantes Activos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(191, 90, 242, 0.1); color: #BF5AF2;"><i class='bx bx-chalkboard'></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-profesores">0</h3>
+                        <p>Profesores Activos</p>
+                    </div>
+                </div>
+                <div class="stat-card" id="card-porcentaje-asistencia">
+                    <div class="stat-icon" style="background: rgba(52, 199, 89, 0.1); color: #34C759;"><i class='bx bx-check-circle'></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-porcentaje">0%</h3>
+                        <p>Asistencia Hoy</p>
+                        <small id="alerta-bajo-rendimiento" style="display:none;">Bajo rendimiento</small>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(255, 149, 0, 0.1); color: #FF9500;"><i class='bx bx-file'></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-justificaciones">0</h3>
+                        <p>Justificaciones Pendientes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(90, 200, 250, 0.1); color: #5AC8FA;"><i class='bx bx-calendar-event'></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-eventos">0</h3>
+                        <p>Eventos Próximos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="card-clases-hoy">
+                <div class="clases-hoy-cab">
+                    <h2><i class='bx bx-chalkboard' style="color: #0A84FF;"></i> Clases de hoy</h2>
+                    <a href="asistencia.html#panel-clases" class="btn btn-primary btn-clases-hoy"><i class='bx bx-list-check'></i> Ver clases del día</a>
+                </div>
+                <p id="clases-hoy-resumen" class="clases-hoy-resumen">Cargando...</p>
+                <div id="clases-hoy-lista"></div>
+            </div>
+
+            <div class="card">
+                <h2><i class='bx bx-trending-down' style="color: #FF3B30;"></i> Top 5 Estudiantes con más Inasistencias</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Faltas (30 días)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-top-inasistencias"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class='bx bx-bolt-circle' style="color: #FF9500;"></i> Acciones Rápidas</h2>
+                <div class="quick-actions" style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <button onclick="abrirModalPreRegistro()" class="btn btn-primary" style="display:flex; align-items:center; gap:6px;">
+                        <i class='bx bx-user-plus'></i> Pre-registrar Usuario
+                    </button>
+                    <a href="usuarios.html" class="btn btn-info" style="display:flex; align-items:center; gap:6px;"><i class='bx bx-group'></i> Gestionar Usuarios</a>
+                    <a href="asignar_seccion.html" class="btn btn-success" style="display:flex; align-items:center; gap:6px;"><i class='bx bx-layer'></i> Asignar Sección</a>
+                    <a href="asistencia.html" class="btn btn-warning" style="display:flex; align-items:center; gap:6px;"><i class='bx bx-check-shield'></i> Ver Asistencia</a>
+                    <a href="calendario.html" class="btn btn-secondary" style="display:flex; align-items:center; gap:6px;"><i class='bx bx-calendar'></i> Calendario</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE PRE-REGISTRO -->
+    <div class="modal-overlay" id="modalPreRegistro">
+        <div class="modal-content">
+            <h3 id="modalTitulo"><i class='bx bx-user-plus' style="color: var(--border-focus);"></i> Pre-registrar Usuario</h3>
+
+            <div id="modalMensaje" class="modal-mensaje"></div>
+
+            <p id="modalSubtitulo" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+                Ingresa la cédula de la persona y su rol.
+            </p>
+
+            <form id="formPreRegistro">
+                <input type="hidden" id="preUserId" value="">
+                <div class="form-group">
+                    <label for="preCedula"><i class='bx bx-id-card'></i> Cédula</label>
+                    <input type="text" id="preCedula" required placeholder="Ej. 12345678">
+                </div>
+                <div class="form-group">
+                    <label for="preRol"><i class='bx bx-badge'></i> Rol en la Institución</label>
+                    <select id="preRol" required>
+                        <option value="estudiante">Estudiante</option>
+                        <option value="profesor">Profesor</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalPreRegistro()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardarPre">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- Lógica para el Modal de Pre-registro ---
+        function abrirModalPreRegistro() {
+            document.getElementById('formPreRegistro').reset();
+            document.getElementById('modalMensaje').className = 'modal-mensaje';
+            document.getElementById('modalMensaje').innerHTML = '';
+            document.getElementById('preUserId').value = '';
+
+            document.getElementById('modalTitulo').innerHTML = `<i class='bx bx-user-plus' style="color: var(--border-focus);"></i> Pre-registrar Usuario`;
+            document.getElementById('modalSubtitulo').innerText = `Ingresa la cédula de la persona y su rol.`;
+            document.getElementById('btnGuardarPre').innerText = 'Guardar';
+            document.getElementById('preCedula').readOnly = false;
+
+            document.getElementById('modalPreRegistro').classList.add('active');
+        }
+
+        function cerrarModalPreRegistro() {
+            document.getElementById('modalPreRegistro').classList.remove('active');
+        }
+
+        document.getElementById('formPreRegistro').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardarPre');
+            const mensajeBox = document.getElementById('modalMensaje');
+            const userId = document.getElementById('preUserId').value;
+
+            const cedula = document.getElementById('preCedula').value.trim();
+            const rol = document.getElementById('preRol').value;
+
+            btn.innerHTML = 'Procesando...';
+            btn.disabled = true;
+
+            try {
+                if (userId) {
+                    // Actualizar rol
+                    const res = await fetch(`/api/auth/actualizar-rol/${userId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nuevoRol: rol })
+                    });
+                    const data = await res.json();
+
+                    if (data.estado === 'exitoso') {
+                        mensajeBox.className = 'modal-mensaje exito';
+                        mensajeBox.innerHTML = `<i class='bx bx-check-circle'></i> ${data.mensaje}`;
+                        setTimeout(cerrarModalPreRegistro, 2000);
+                    } else {
+                        mensajeBox.className = 'modal-mensaje error';
+                        mensajeBox.innerHTML = `<i class='bx bx-error-circle'></i> ${data.mensaje}`;
+                    }
+                } else {
+                    // Crear nuevo
+                    const res = await fetch('/api/auth/pre-registro', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cedula, rol })
+                    });
+                    const data = await res.json();
+
+                    if (data.estado === 'exitoso') {
+                        mensajeBox.className = 'modal-mensaje exito';
+                        mensajeBox.innerHTML = `<i class='bx bx-check-circle'></i> ${data.mensaje}`;
+                        setTimeout(cerrarModalPreRegistro, 2000);
+                    }
+                    else if (data.estado === 'duplicado') {
+                        mensajeBox.className = 'modal-mensaje error';
+                        mensajeBox.innerHTML = `<i class='bx bx-error-circle'></i> ${data.mensaje}`;
+
+                        document.getElementById('modalTitulo').innerHTML = `<i class='bx bx-edit' style="color: #FF9500;"></i> Cédula Duplicada`;
+                        document.getElementById('modalSubtitulo').innerText = `Esta cédula ya pertenece a un usuario. Puedes actualizar su rol a continuación.`;
+                        document.getElementById('preUserId').value = data.usuarioExistente.id;
+                        document.getElementById('preCedula').readOnly = true;
+
+                        document.getElementById('preRol').value = data.usuarioExistente.rol;
+
+                        btn.innerHTML = 'Actualizar Rol';
+                    }
+                    else {
+                        mensajeBox.className = 'modal-mensaje error';
+                        mensajeBox.innerHTML = `<i class='bx bx-error-circle'></i> ${data.mensaje}`;
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                mensajeBox.className = 'modal-mensaje error';
+                mensajeBox.innerHTML = `<i class='bx bx-wifi-off'></i> Error de conexión con el servidor.`;
+            } finally {
+                if (!userId) btn.disabled = false;
+                if (btn.innerHTML === 'Procesando...') btn.innerHTML = 'Guardar';
+            }
+        });
+
+        // --- Lógica del Dashboard Original ---
+        const API_DASHBOARD_STATS = '/api/dashboard/stats';
+
+        async function cargarDatosDashboard() {
+            try {
+                const res = await fetch(API_DASHBOARD_STATS);
+                const data = await res.json();
+
+                if (data.estado === 'exitoso') {
+                    const stats = data.datos;
+                    document.getElementById('stat-estudiantes').innerText = stats.total_estudiantes;
+                    document.getElementById('stat-profesores').innerText = stats.total_profesores;
+                    document.getElementById('stat-justificaciones').innerText = stats.justificaciones_pendientes;
+                    document.getElementById('stat-eventos').innerText = stats.eventos_proximos;
+
+                    // % de asistencia en las clases registradas hoy (null = aún no se pasa lista)
+                    const porcentaje = stats.porcentaje_hoy;
+                    document.getElementById('stat-porcentaje').innerText = porcentaje === null ? 'Sin datos' : `${porcentaje.toFixed(2)}%`;
+
+                    const cardAsistencia = document.getElementById('card-porcentaje-asistencia');
+                    const alertaBajo = document.getElementById('alerta-bajo-rendimiento');
+
+                    if (porcentaje !== null && porcentaje < stats.porcentaje_minimo) {
+                        cardAsistencia.classList.add('alert-card');
+                        alertaBajo.style.display = 'block';
+                    } else {
+                        cardAsistencia.classList.remove('alert-card');
+                        alertaBajo.style.display = 'none';
+                    }
+
+                    renderTopInasistencias(stats.top_inasistencias);
+                }
+            } catch (error) {
+                console.error('Error de conexión con la API del dashboard:', error);
+            }
+        }
+
+        function renderTopInasistencias(lista) {
+            const tbody = document.getElementById('tabla-top-inasistencias');
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-muted);">No hay inasistencias registradas en los últimos 30 días</td></tr>`;
+                return;
+            }
+            let html = '';
+            lista.forEach((item, idx) => {
+                html += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td><strong>${escapeHTML(item.nombre)} ${escapeHTML(item.apellido || '')}</strong></td>
+                            <td>${escapeHTML(item.cedula)}</td>
+                            <td><span class="badge-danger">${item.faltas} faltas</span></td>
+                        </tr>
+                    `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function actualizarReloj() {
+            const ahora = new Date();
+            const elClock = document.getElementById('live-clock');
+            if (elClock) elClock.innerText = ahora.toLocaleString('es-ES', {
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function cargarInfoUsuario() {
+            const usuarioGuardado = window.USUARIO || {}; // de js/sesion.js
+            if (usuarioGuardado && usuarioGuardado.nombre) {
+                document.getElementById('saludo-director').innerText = `Bienvenido, ${usuarioGuardado.nombre} ${usuarioGuardado.apellido || ''}`;
+            }
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+
+        // Clases de hoy: avisa cuáles están en curso o ya terminaron sin lista
+        async function cargarClasesHoy() {
+            const resumen = document.getElementById('clases-hoy-resumen');
+            const lista = document.getElementById('clases-hoy-lista');
+            if (!resumen || !lista) return;
+            try {
+                const r = await fetch('/api/clases/del-dia');
+                const d = await r.json().catch(() => ({}));
+                if (!r.ok) throw new Error(d.mensaje || 'Error');
+                const clases = d.clases || [];
+                if (d.feriado) { resumen.textContent = `Hoy no hay clases (${d.feriado}).`; lista.innerHTML = ''; return; }
+                if (clases.length === 0) { resumen.textContent = 'Hoy no hay clases en el horario.'; lista.innerHTML = ''; return; }
+                const cuenta = (e) => clases.filter(c => c.estado === e).length;
+                const pendientes = clases.filter(c => c.estado === 'sin_lista' || c.estado === 'en_curso');
+                const partes = [`${clases.length} clase(s)`, `${cuenta('con_lista')} con lista`];
+                if (cuenta('sin_lista')) partes.push(`${cuenta('sin_lista')} terminaron sin lista`);
+                if (cuenta('en_curso')) partes.push(`${cuenta('en_curso')} en curso`);
+                if (cuenta('no_dada')) partes.push(`${cuenta('no_dada')} no dada(s)`);
+                if (cuenta('por_empezar')) partes.push(`${cuenta('por_empezar')} por empezar`);
+                resumen.textContent = partes.join(' · ') + (pendientes.length ? '' : '. Todo al día.');
+                const texto = { en_curso: 'En curso, sin lista', sin_lista: 'Terminó sin lista' };
+                lista.innerHTML = pendientes.map(c => `
+                    <div class="clase-pendiente">
+                        <div>
+                            <div><strong>${escapeHTML(String(c.inicio))} - ${escapeHTML(String(c.fin))}</strong> · ${escapeHTML(c.materia)} · ${escapeHTML(c.curso)}${c.turno ? ' · ' + escapeHTML(c.turno) : ''}</div>
+                            <div class="det">Profesor: ${escapeHTML(c.profesor)}${c.suplente ? ' · Suplente: ' + escapeHTML(c.suplente.nombre) : ''}</div>
+                        </div>
+                        <span class="chip-pend ${c.estado}">${texto[c.estado]}</span>
+                    </div>`).join('');
+            } catch (e) {
+                console.error('Error al cargar clases de hoy:', e);
+                resumen.textContent = 'No se pudieron leer las clases de hoy.';
+                lista.innerHTML = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            actualizarReloj();
+            setInterval(actualizarReloj, 60000);
+            cargarInfoUsuario();
+            cargarDatosDashboard();
+            cargarClasesHoy();
+            setInterval(cargarClasesHoy, 5 * 60000);
+        });
+    </script>
+    <script src="../../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+SISTEMA DE ASISTENCIA - U.E. INSTITUTO ELENA DE BUENO
+=====================================================
+
+QUÉ HAY QUE INSTALAR (una sola vez)
+-----------------------------------
+1. Node.js versión 18 o más nueva (la "LTS"):  https://nodejs.org
+2. XAMPP (trae MySQL y phpMyAdmin):             https://www.apachefriends.org
+
+Las librerías del sistema ya vienen en la carpeta node_modules.
+No hace falta internet ni "npm install".
+
+
+CÓMO PONERLO A FUNCIONAR
+------------------------
+1. Descomprima esta carpeta, por ejemplo en Documentos.
+
+2. Abra el panel de XAMPP y presione "Start" en MySQL y en Apache.
+
+3. Cargue la base de datos:
+   - Abra en el navegador  http://localhost/phpmyadmin
+   - Arriba, pestaña "Importar".
+   - "Seleccionar archivo" -> base_de_datos\sistema_asistencia.sql
+   - Botón "Importar" (abajo).
+   El archivo crea la base "sistema_asistencia" sola.
+   OJO: si ya existe una base con ese nombre, sus tablas se reemplazan.
+
+   (Otra forma, por consola:  C:\xampp\mysql\bin\mysql -u root < base_de_datos\sistema_asistencia.sql )
+
+4. El archivo .env ya trae los datos normales de XAMPP (usuario root, sin clave).
+   Si su MySQL tiene clave, ábralo con el Bloc de notas y escríbala en DB_PASSWORD.
+
+5. Doble clic en  iniciar.bat
+   Se abre el navegador en  http://localhost:3000/login.html
+   (Otra forma: abrir una consola en esta carpeta y escribir  node server.js )
+
+   No cierre la ventana negra mientras use el sistema.
+
+
+CUENTAS PARA ENTRAR (se puede usar el correo o la cédula)
+----------------------------------------------------------
+  Director (super administrador, único)
+      correo  admin@elenadebueno.local     cédula 10000000   clave Admin-KDuvr286
+  Profesor
+      correo  profesor@prueba.local        cédula 20000001   clave Prof-GCnsv636
+  Estudiante 1
+      correo  estudiante1@prueba.local     cédula 30000001   clave Est1-WHjwm842
+  Estudiante 2
+      correo  estudiante2@prueba.local     cédula 30000002   clave Est2-HEmdt498
+
+Son cuentas de prueba. Cambie las claves antes de usar el sistema en serio.
+Ya vienen cargadas las 24 secciones, la configuración y la lista de groserías.
+El horario es solo un bloque de prueba (Matemática, lunes 08:00-09:30, aula PRUEBA):
+el horario real lo carga el director en Director > Horarios.
+
+
+SI ALGO FALLA
+-------------
+  "ECONNREFUSED"                 -> MySQL no está encendido en XAMPP.
+  "Access denied for user root"  -> la clave de MySQL no coincide: corrija DB_PASSWORD en .env.
+  "Unknown database"             -> falta importar base_de_datos\sistema_asistencia.sql (paso 3).
+  "EADDRINUSE ... 3000"          -> el sistema ya está abierto en otra ventana. Ciérrela,
+                                    o cambie PORT=3000 por PORT=3001 en .env.
+  "node no se reconoce"          -> falta instalar Node.js (reinicie la PC al terminar).
+
+
+COMANDOS ÚTILES (en una consola dentro de esta carpeta)
+-------------------------------------------------------
+  node crear_admin.js                    Crea o arregla el super administrador.
+  node cambiar_clave.js <correo> <clave> Cambia la clave de cualquier usuario.
+  node reiniciar_bd.js                   Muestra qué borraría (no cambia nada).
+  node reiniciar_bd.js --confirmar       Borra los datos y crea otra vez las cuentas de prueba.
+  node arreglar_horarios.js              Revisa choques de horario.
+  node deshacer_cierre.js                Deshace el último cierre de periodo (pide escribir DESHACER).
+  node recuperar_acceso.js               Contraseña nueva del director o quitar la clave de seguridad.
+  node limpiar_bd.js                     Deja solo usuarios y secciones (pide escribir LIMPIAR).
+
+Cada vez que arranca, el servidor guarda un respaldo en la carpeta respaldos_bd
+si tiene que actualizar la base. Los cambios del sistema están en CAMBIOS.md.

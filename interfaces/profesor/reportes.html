@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Asistencia - Profesor</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    
+    <!-- LIBRERÍA PARA EXPORTAR A EXCEL (Usando jsDelivr que es más seguro y menos bloqueado) -->
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+
+    <style>
+        .tabla-wrapper {
+            width: 100%;
+            max-height: 65vh;
+            overflow: auto;
+            border-radius: var(--radio-card, 12px);
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tabla-reporte-mensual {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .tabla-reporte-mensual thead th {
+                position: sticky;
+                top: 0;
+                background: var(--bg-table-hover);
+                z-index: 20;
+                padding: 10px 8px;
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                border-bottom: 2px solid var(--border-color);
+                text-align: center;
+                box-shadow: inset 0 -1px 0 var(--border-color);
+            }
+
+            .tabla-reporte-mensual td {
+                padding: 8px;
+                border-bottom: 1px solid var(--border-color);
+                text-align: center;
+                font-size: 12px;
+                background: var(--bg-card);
+            }
+
+                .tabla-reporte-mensual th:nth-child(1),
+                .tabla-reporte-mensual td:nth-child(1) {
+                    position: sticky;
+                    left: 0;
+                    z-index: 15;
+                    text-align: left;
+                    min-width: 180px;
+                    max-width: 220px;
+                    border-right: 1px solid var(--border-color);
+                    background: var(--bg-card);
+                }
+
+                .tabla-reporte-mensual th:nth-child(2),
+                .tabla-reporte-mensual td:nth-child(2) {
+                    position: sticky;
+                    left: 180px;
+                    z-index: 15;
+                    text-align: left;
+                    min-width: 90px;
+                    border-right: 2px solid var(--border-color);
+                    background: var(--bg-card);
+                }
+
+            .tabla-reporte-mensual thead th:nth-child(1),
+            .tabla-reporte-mensual thead th:nth-child(2) {
+                z-index: 25;
+            }
+
+            .tabla-reporte-mensual th.dia-col,
+            .tabla-reporte-mensual td.dia-col {
+                min-width: 32px;
+                padding: 6px 4px;
+                font-size: 12px;
+                border-right: 1px solid var(--border-color);
+            }
+
+        .stats-grid-custom {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card-estudiante {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+            .stat-card-estudiante .icon {
+                font-size: 28px;
+                margin-bottom: 5px;
+            }
+
+            .stat-card-estudiante .numero {
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+
+            .stat-card-estudiante .etiqueta {
+                font-size: 13px;
+                color: var(--text-secondary);
+            }
+
+        .filtros-container {
+            background: var(--bg-card);
+            padding: 20px 25px;
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .filtros-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+            .filtros-form .grupo {
+                flex: 1;
+                min-width: 150px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .filtros-form select {
+                padding: 10px 14px;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                background: var(--bg-input);
+                color: var(--text-primary);
+                font-size: 14px;
+            }
+            
+        .btn-excel {
+            background: #107C41; /* Verde oficial de Excel */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .btn-excel:hover { background: #0c5e31; }
+        .btn-excel i { font-size: 20px; }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li>
+                    <div class="toggle-submenu" onclick="toggleSubmenu(this)">
+                        <span><i class='bx bx-book-open'></i> Mis Secciones</span>
+                        <span class="arrow"><i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <ul class="submenu" id="submenu-secciones"></ul>
+                </li>
+                <li>
+                    <a href="justificaciones.html">
+                        <i class='bx bx-file'></i> Justificaciones
+                        <span id="badge-justificaciones-menu" class="badge-menu" style="background:#fc8181; color:white; padding:1px 8px; border-radius:10px; font-size:10px; margin-left:5px; display:none;">0</span>
+                    </a>
+                </li>
+                <li><a href="reportes.html" class="active"><i class='bx bx-bar-chart-alt-2'></i> Reportes</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Reportes de Asistencia</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Visualiza las métricas mensuales por sección</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="filtros-container">
+                <form id="form-filtros-reporte" class="filtros-form" onsubmit="event.preventDefault(); generarReporte();">
+                    <div class="grupo">
+                        <label for="filtro-seccion"><i class='bx bx-book-bookmark'></i> Sección</label>
+                        <select id="filtro-seccion"></select>
+                    </div>
+                    <div class="grupo">
+                        <label for="filtro-mes"><i class='bx bx-calendar'></i> Mes</label>
+                        <select id="filtro-mes">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="grupo">
+                        <label for="filtro-anio"><i class='bx bx-calendar-event'></i> Año</label>
+                        <select id="filtro-anio">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+                    <div class="grupo" style="flex:0; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-info" style="padding: 10px 24px; height: 42px; background: #5A67D8; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class='bx bx-search-alt-2'></i> Cargar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SECCIÓN DE KPI Y BOTÓN DE EXCEL -->
+            <div class="kpi-fila" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px;">
+                <div class="stats-grid-custom" style="flex: 1; margin-bottom:0; margin-right: 20px;">
+                    <div class="stat-card-estudiante">
+                        <i class='bx bx-user icon' style="color: #5856D6;"></i>
+                        <div class="numero" id="kpi-estudiantes">0</div>
+                        <div class="etiqueta">Estudiantes</div>
+                    </div>
+                    <div class="stat-card-estudiante">
+                        <i class='bx bx-line-chart icon' style="color: #34C759;"></i>
+                        <div class="numero" id="kpi-promedio">0%</div>
+                        <div class="etiqueta">Promedio Asistencia</div>
+                    </div>
+                    <div class="stat-card-estudiante">
+                        <i class='bx bx-check-circle icon' style="color: #007AFF;"></i>
+                        <div class="numero" id="kpi-presentes">0</div>
+                        <div class="etiqueta">Total Presentes</div>
+                    </div>
+                    <div class="stat-card-estudiante">
+                        <i class='bx bx-x-circle icon' style="color: #FF3B30;"></i>
+                        <div class="numero" id="kpi-ausentes">0</div>
+                        <div class="etiqueta">Total Ausentes</div>
+                    </div>
+                </div>
+
+                <!-- Al botón le pusimos un ID y le quitamos el onclick -->
+                <button id="btnExportarExcel" class="btn-excel" title="Descargar reporte en Excel">
+                    <i class='bx bxs-file-export'></i> Exportar a Excel
+                </button>
+            </div>
+
+            <div class="tabla-wrapper">
+                <table class="tabla-reporte-mensual">
+                    <thead>
+                        <tr id="cabecera-dias-reporte">
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla-reporte">
+                        <tr><td colspan="37" style="text-align:center; padding:30px; color:var(--text-secondary);">Cargando datos del reporte...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="leyenda-horario" style="margin-top:20px; border-radius:12px; border:1px solid var(--border-color); background: var(--bg-card); padding: 15px;">
+                <div class="item" style="display:inline-block; margin-right: 15px;"><span class="badge-estado-asist presente" style="background:#34C759; color:white; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold;">P</span> Presente</div>
+                <div class="item" style="display:inline-block; margin-right: 15px;"><span class="badge-estado-asist ausente" style="background:#FF3B30; color:white; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold;">A</span> Ausente</div>
+                <div class="item" style="display:inline-block; margin-right: 15px;"><span class="badge-estado-asist tarde" style="background:#FF9500; color:white; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold;">T</span> Tarde</div>
+                <div class="item" style="display:inline-block; margin-right: 15px;"><span class="badge-estado-asist justificada" style="background:#007AFF; color:white; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold;">J</span> Justificado</div>
+                <div class="item" style="display:inline-block; margin-right: 15px;"><span style="background:#8E8E93; color:white; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold;">ND</span> Clase no dada (no cuenta como falta)</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/profesor_reportes.js"></script>
+    <script src="../../js/script.js"></script>
+</body>
+</html>

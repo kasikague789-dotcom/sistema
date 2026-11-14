@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Nuevo Usuario - Sistema</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <style>
+        .form-container { max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 500; 
+            color: var(--text-secondary, #718096); 
+            font-size: 13px; 
+        }
+        .form-group input, .form-group select { 
+            width: 100%; 
+            padding: 8px 12px; 
+            border: 2px solid var(--border-color, #e2e8f0); 
+            border-radius: 8px; 
+            font-size: 14px; 
+            background: var(--bg-input, #f7fafc); 
+            color: var(--text-primary, #2d3748); 
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus { 
+            border-color: var(--border-focus, #3182ce); 
+            outline: none; 
+        }
+        .form-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group input { width: auto; cursor: pointer; }
+        
+        .error-banner {
+            background: #fed7d7; 
+            color: #9b2c2c; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            border-left: 4px solid #fc8181;
+            display: none;
+        }
+        .error-banner strong { display: block; font-size: 15px; margin-bottom: 5px; }
+        .error-banner .sugerencia { 
+            margin-top: 10px; 
+            padding: 10px; 
+            background: #fff5f5; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            color: #2d3748;
+        }
+        body.dark-mode .error-banner .sugerencia {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+        .error-banner .sugerencia .texto-filtrado { 
+            background: #ffffff; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            display: inline-block; 
+            border: 1px solid #feb2b2;
+            color: #2b6cb0;
+            font-weight: 600;
+        }
+        body.dark-mode .error-banner .sugerencia .texto-filtrado {
+            background: #1a202c;
+            border-color: #4a5568;
+            color: #63b3ed;
+        }
+
+        .info-filtro {
+            background: #e6fffa; 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            color: #234; 
+            margin-bottom: 15px; 
+            border-left: 3px solid #38b2ac;
+        }
+        body.dark-mode .info-filtro {
+            background: #1a3a3a;
+            color: #e2e8f0;
+        }
+
+        .section-assign {
+            background: var(--bg-table-hover, #f7fafc); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+            border: 1px solid var(--border-color, #e2e8f0);
+            display: none;
+        }
+        .section-assign h4 { margin: 0 0 10px 0; color: var(--text-primary, #2d3748); font-size: 15px; }
+
+        @media (max-width: 768px) {
+            .form-actions .btn { flex: 1; text-align: center; }
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        .bloque-carnet { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color, #e2e8f0); }
+        .carnet-ayuda { margin: 0 0 14px; font-size: 13px; color: var(--text-secondary); max-width: 70ch; }
+        .carnet-grid { display: grid; grid-template-columns: 160px 240px minmax(0, 1fr); gap: 20px; align-items: start; }
+        .carnet-foto-col, .carnet-qr-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .carnet-foto { width: 140px; height: 175px; border-radius: 12px; overflow: hidden; background: var(--bg-input, #f1f5f9);
+            border: 1px solid var(--border-color, #e2e8f0); display: flex; align-items: center; justify-content: center;
+            font-size: 56px; color: var(--text-secondary); }
+        .carnet-foto img { width: 100%; height: 100%; object-fit: cover; }
+        .carnet-nota { color: var(--text-secondary); font-size: 12px; }
+        #carnet-qr { width: 220px; height: 220px; image-rendering: pixelated; border-radius: 8px; border: 1px solid var(--border-color, #e2e8f0); background: #fff; }
+        .carnet-codigo { font-size: 15px; font-weight: 700; letter-spacing: 0.5px; color: var(--text-primary); }
+        .carnet-datos { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; margin: 0 0 14px; font-size: 14px; }
+        .carnet-datos dt { color: var(--text-secondary); }
+        .carnet-datos dd { margin: 0; font-weight: 600; color: var(--text-primary); overflow-wrap: anywhere; }
+        .carnet-botones { display: flex; flex-wrap: wrap; gap: 8px; }
+        .btn-carnet { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 14px;
+            border-radius: 10px; border: 1px solid transparent; background: #0a84ff; color: #fff; font: inherit; font-size: 14px;
+            font-weight: 600; cursor: pointer; }
+        .btn-carnet:hover { background: #0062cc; }
+        .btn-carnet-sec { background: transparent; color: var(--text-primary); border-color: var(--border-color, #cbd5e1); }
+        .btn-carnet-sec:hover { background: var(--bg-table-hover, #f1f5f9); }
+        .btn-carnet-peligro { background: transparent; color: #c4000f; border-color: #f3b4b4; }
+        .btn-carnet-peligro:hover { background: rgba(255, 59, 48, 0.08); }
+        .btn-carnet:focus-visible { outline: 3px solid rgba(10, 132, 255, 0.45); outline-offset: 2px; }
+        .visualmente-oculto { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; }
+        @media (max-width: 900px) { .carnet-grid { grid-template-columns: 1fr 1fr; } .carnet-datos-col { grid-column: 1 / -1; } }
+        @media (max-width: 520px) { .carnet-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html" class="active"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header>
+                <div class="header-info">
+                    <h1 id="form-titulo">Nuevo Usuario</h1>
+                    <p id="form-subtitulo">Crea un nuevo usuario en el sistema</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Banner de Error de Validación (Filtro de Groserías) -->
+            <div id="error-banner" class="error-banner">
+                <strong>No se pudo guardar</strong>
+                <span id="error-mensaje-texto"></span>
+                <div id="error-sugerencia" class="sugerencia" style="display:none;">
+                    <strong>Sugerencia:</strong> Puedes utilizar los siguientes textos filtrados:
+                    <br><br>
+                    <div id="sugerencia-nombre-container" style="display:none; margin-bottom:5px;">
+                        <strong>Nombre sugerido:</strong> <span id="sugerencia-nombre" class="texto-filtrado"></span>
+                    </div>
+                    <div id="sugerencia-apellido-container" style="display:none; margin-bottom:5px;">
+                        <strong>Apellido sugerido:</strong> <span id="sugerencia-apellido" class="texto-filtrado"></span>
+                    </div>
+                    <small style="color:var(--text-secondary); display:block; margin-top:5px;">Corrige las palabras ofensivas para continuar.</small>
+                </div>
+            </div>
+
+            <div class="card form-container">
+                <div class="info-filtro">
+                    El sistema <strong>no permite</strong> guardar nombres o apellidos que contengan palabras ofensivas.
+                </div>
+                
+                <form id="usuarioForm" onsubmit="guardarUsuario(event)">
+                    <input type="hidden" id="usuario_id" value="0">
+
+                    <div class="form-group">
+                        <label for="cedula">Cédula *</label>
+                        <input type="text" id="cedula" name="cedula" required placeholder="Ej. 30123456 (solo números)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Ingresa el nombre sin palabras ofensivas">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellido">Apellido *</label>
+                        <input type="text" id="apellido" name="apellido" required placeholder="Ingresa el apellido sin palabras ofensivas">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="correo@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" placeholder="0412-1234567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rol">Rol *</label>
+                        <select id="rol" name="rol" required onchange="toggleSeccion(this.value)">
+                            <option value="profesor">Profesor</option>
+                            <option value="estudiante">Estudiante</option>
+                        </select>
+                    </div>
+
+                    <!-- Asignación de Sección (solo para estudiantes) -->
+                    <div id="seccionDiv" class="section-assign">
+                        <h4>Asignación de sección</h4>
+                        <div class="form-group">
+                            <label for="curso_id">Sección</label>
+                            <select id="curso_id" name="curso_id">
+                                <option value="">Sin asignar</option>
+                                <!-- Llenado por JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="anio_academico">Año Académico</label>
+                            <select id="anio_academico" name="anio_academico">
+                                <!-- Llenado por JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="activo" name="activo" checked>
+                        <label for="activo">Usuario activo</label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success" style="background:#48bb78; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:500;">Guardar</button>
+                        <a href="usuarios.html" class="btn btn-secondary" style="background:#a0aec0; color:white; text-decoration:none; padding:10px 18px; border-radius:8px; display:inline-block;">Cancelar</a>
+                    </div>
+                </form>
+
+                <!-- Solo al editar: "¿Olvidó su contraseña?" -> el director pone una clave temporal -->
+                <div id="bloque-clave" style="display:none; margin-top:24px; padding-top:18px; border-top:1px solid var(--border-color, #e2e8f0);">
+                    <h3 style="margin:0 0 6px;">Restablecer contraseña</h3>
+                    <p style="margin:0 0 12px; font-size:13px; color:var(--text-secondary);">
+                        Escriba una clave temporal, guárdela y entréguesela a la persona. Ella la cambia luego en "Mi Perfil".
+                    </p>
+                    <div id="mensaje-clave" role="alert" style="font-size:13px; margin-bottom:10px;"></div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="form-group" style="flex:1; min-width:200px; margin:0;">
+                            <label for="clave_temporal">Clave temporal (mínimo 6)</label>
+                            <input type="text" id="clave_temporal" minlength="6" autocomplete="off">
+                        </div>
+                        <button type="button" id="btn-clave" class="btn" style="background:#ed8936; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:500;">Guardar clave temporal</button>
+                    </div>
+                </div>
+
+                <!-- Solo estudiantes: carnet con código QR y foto -->
+                <section id="bloque-carnet" class="bloque-carnet" style="display:none;" aria-labelledby="titulo-carnet">
+                    <h3 id="titulo-carnet" style="margin:0 0 6px;">Carnet y código QR</h3>
+                    <p class="carnet-ayuda">El QR es único: identifica a este estudiante en este periodo. El profesor lo escanea al pasar lista. El diseño del carnet lo hacen otras personas: descarguen el QR en PNG.</p>
+                    <div class="carnet-grid">
+                        <div class="carnet-foto-col">
+                            <div class="carnet-foto" id="carnet-foto"><i class='bx bx-user' aria-hidden="true"></i></div>
+                            <label class="btn-carnet" for="input-foto"><i class='bx bx-image-add'></i> Cambiar foto</label>
+                            <input type="file" id="input-foto" accept="image/jpeg,image/png,image/webp" class="visualmente-oculto">
+                            <button type="button" class="btn-carnet btn-carnet-sec" id="btn-quitar-foto" style="display:none;"><i class='bx bx-trash'></i> Quitar foto</button>
+                            <small class="carnet-nota">Opcional. JPG o PNG.</small>
+                        </div>
+                        <div class="carnet-qr-col">
+                            <canvas id="carnet-qr" width="220" height="220" role="img" aria-label="Código QR del carnet"></canvas>
+                            <code id="carnet-codigo" class="carnet-codigo">Cargando…</code>
+                        </div>
+                        <div class="carnet-datos-col">
+                            <dl class="carnet-datos" id="carnet-datos"></dl>
+                            <div class="carnet-botones">
+                                <button type="button" class="btn-carnet" id="btn-qr-png"><i class='bx bx-download'></i> Descargar QR (PNG)</button>
+                                <button type="button" class="btn-carnet btn-carnet-sec" id="btn-qr-imprimir"><i class='bx bx-printer'></i> Imprimir</button>
+                                <button type="button" class="btn-carnet btn-carnet-peligro" id="btn-qr-nuevo"><i class='bx bx-refresh'></i> Generar QR nuevo</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Formulario REAL de usuarios (antes usaba usuarios y cursos inventados y no guardaba nada)
+        let listaGroserias = [];
+        let filtroActivo = true;
+
+        function actualizarReloj() {
+            const ahora = new Date();
+            const dia = String(ahora.getDate()).padStart(2, '0');
+            const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+            const anio = ahora.getFullYear();
+            const horas = String(ahora.getHours()).padStart(2, '0');
+            const minutos = String(ahora.getMinutes()).padStart(2, '0');
+            const elClock = document.getElementById('live-clock');
+            if (elClock) elClock.innerText = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+        }
+
+        async function cargarCombos() {
+            const selectCurso = document.getElementById('curso_id');
+            try {
+                const res = await fetch('/api/secciones');
+                const data = await res.json();
+                (data.datos || []).filter(c => c.activo == 1).forEach(c => {
+                    const op = document.createElement('option');
+                    op.value = c.id;
+                    op.textContent = `${c.nivel ? c.nivel + ' - ' : ''}${c.nombre} - Sección ${c.seccion}${c.turno ? ' · ' + c.turno : ''}`;
+                    selectCurso.appendChild(op);
+                });
+            } catch (e) { console.error('Error al cargar secciones:', e); }
+
+            await window.llenarSelectAnios(document.getElementById('anio_academico'));
+
+            try {
+                const res = await fetch('/api/configuracion');
+                const data = await res.json();
+                listaGroserias = (data.groserias || []).filter(g => g.activo == 1).map(g => g.palabra);
+                filtroActivo = !data.configuracion || data.configuracion.filtro_groserias_activo !== 'false';
+            } catch (e) { console.error('Error al cargar groserías:', e); }
+        }
+
+        async function inicializarFormulario() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = parseInt(urlParams.get('id') || '0');
+
+            if (userId > 0) {
+                try {
+                    const res = await fetch(`/api/usuarios/${userId}`);
+                    const data = await res.json();
+                    if (!res.ok) { await avisar(data.mensaje || 'Puede que lo hayan eliminado.', { tipo: 'error', titulo: 'Usuario no encontrado', boton: 'Volver a usuarios' }); window.location.href = 'usuarios.html'; return; }
+                    const user = data.datos;
+                    document.getElementById('page-title').innerText = 'Editar Usuario - Sistema';
+                    document.getElementById('form-titulo').innerText = 'Editar Usuario';
+                    document.getElementById('form-subtitulo').innerText = 'Modifica los datos del usuario seleccionado';
+
+                    document.getElementById('usuario_id').value = user.id;
+                    document.getElementById('cedula').value = user.cedula || '';
+                    document.getElementById('nombre').value = user.nombre || '';
+                    document.getElementById('apellido').value = user.apellido || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('telefono').value = user.telefono || '';
+                    if (user.rol === 'director') {
+                        // El director es único: su rol no se cambia
+                        const sel = document.getElementById('rol');
+                        sel.innerHTML = '<option value="director">Director (super administrador)</option>';
+                        sel.disabled = true;
+                        document.getElementById('activo').disabled = true;
+                    }
+                    document.getElementById('rol').value = user.rol;
+                    document.getElementById('activo').checked = user.activo == 1;
+
+                    document.getElementById('bloque-clave').style.display = 'block';
+                    toggleSeccion(user.rol);
+                    if (user.rol === 'estudiante') {
+                        document.getElementById('curso_id').value = user.curso_id || '';
+                        if (user.anio_academico) await window.llenarSelectAnios(document.getElementById('anio_academico'), user.anio_academico);
+                        if (window.mostrarCarnet) window.mostrarCarnet(user.id);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    avisar('Revise que el servidor esté encendido e intente de nuevo.', { tipo: 'error', titulo: 'Sin conexión con el servidor' });
+                }
+            } else {
+                toggleSeccion(document.getElementById('rol').value);
+            }
+        }
+
+        function toggleSeccion(rol) {
+            const div = document.getElementById('seccionDiv');
+            div.style.display = rol === 'estudiante' ? 'block' : 'none';
+        }
+
+        const sinAcentos = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+        // Devuelve las groserías encontradas (palabra completa) y el texto limpio sugerido
+        function revisarTexto(texto) {
+            if (!filtroActivo) return { malas: [], limpio: texto };
+            const prohibidas = new Set(listaGroserias.map(sinAcentos));
+            const malas = [];
+            const limpio = texto.split(/(\s+)/).map(p => {
+                if (prohibidas.has(sinAcentos(p))) { malas.push(p); return '***'; }
+                return p;
+            }).join('');
+            return { malas, limpio };
+        }
+
+        function mostrarError(texto, sugNombre, sugApellido) {
+            const banner = document.getElementById('error-banner');
+            document.getElementById('error-mensaje-texto').innerText = texto;
+            const sugerenciaBox = document.getElementById('error-sugerencia');
+            const sugNombreCont = document.getElementById('sugerencia-nombre-container');
+            const sugApellidoCont = document.getElementById('sugerencia-apellido-container');
+            sugNombreCont.style.display = sugNombre ? 'block' : 'none';
+            sugApellidoCont.style.display = sugApellido ? 'block' : 'none';
+            if (sugNombre) document.getElementById('sugerencia-nombre').innerText = sugNombre;
+            if (sugApellido) document.getElementById('sugerencia-apellido').innerText = sugApellido;
+            sugerenciaBox.style.display = (sugNombre || sugApellido) ? 'block' : 'none';
+            banner.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function guardarUsuario(event) {
+            event.preventDefault();
+
+            const nombreVal = document.getElementById('nombre').value.trim();
+            const apellidoVal = document.getElementById('apellido').value.trim();
+
+            const rn = revisarTexto(nombreVal);
+            const ra = revisarTexto(apellidoVal);
+            if (rn.malas.length || ra.malas.length) {
+                const detalles = [];
+                if (rn.malas.length) detalles.push(`'${rn.malas.join(', ')}' en el nombre`);
+                if (ra.malas.length) detalles.push(`'${ra.malas.join(', ')}' en el apellido`);
+                mostrarError(`No se puede guardar el usuario porque contiene palabras ofensivas: ${detalles.join(' y ')}.`,
+                    rn.malas.length ? rn.limpio : '', ra.malas.length ? ra.limpio : '');
+                return;
+            }
+            document.getElementById('error-banner').style.display = 'none';
+
+            const id = parseInt(document.getElementById('usuario_id').value || '0');
+            const rol = document.getElementById('rol').value;
+            const payload = {
+                cedula: document.getElementById('cedula').value.trim(),
+                nombre: nombreVal,
+                apellido: apellidoVal,
+                email: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                rol,
+                activo: document.getElementById('activo').checked
+            };
+            if (rol === 'estudiante') {
+                payload.curso_id = document.getElementById('curso_id').value || null;
+                payload.anio_academico = parseInt(document.getElementById('anio_academico').value) || undefined;
+            }
+
+            const boton = event.submitter || document.querySelector('#usuarioForm button[type="submit"]');
+            if (boton) boton.disabled = true;
+            try {
+                const res = await fetch(id > 0 ? `/api/usuarios/${id}` : '/api/usuarios', {
+                    method: id > 0 ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok) {
+                    window.location.href = 'usuarios.html?msg=' + encodeURIComponent(data.mensaje || 'Usuario guardado correctamente');
+                } else {
+                    mostrarError((data.mensaje || 'No se pudo guardar el usuario.'));
+                }
+            } catch (e) {
+                console.error(e);
+                mostrarError('Error de conexión con el servidor.');
+            } finally {
+                if (boton) boton.disabled = false;
+            }
+        }
+
+
+        async function guardarClaveTemporal() {
+            const id = parseInt(document.getElementById('usuario_id').value || '0');
+            const input = document.getElementById('clave_temporal');
+            const caja = document.getElementById('mensaje-clave');
+            const pinta = (ok, t) => { caja.style.color = ok ? '#2f855a' : '#c53030'; caja.textContent = t; };
+            if (!id) return;
+            if (input.value.length < 6) return pinta(false, 'La clave temporal debe tener al menos 6 caracteres.');
+            try {
+                const res = await fetch(`/api/usuarios/${id}/clave`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nueva: input.value })
+                });
+                const data = await res.json().catch(() => ({}));
+                pinta(res.ok, data.mensaje || (res.ok ? 'Listo.' : 'No se pudo guardar.'));
+                if (res.ok) input.value = '';
+            } catch (e) {
+                pinta(false, 'Error de conexión.');
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', async function() {
+            document.getElementById('btn-clave').addEventListener('click', guardarClaveTemporal);
+            actualizarReloj();
+            setInterval(actualizarReloj, 60000);
+
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+
+            await cargarCombos();
+            await inicializarFormulario();
+        });
+    </script>
+    <script src="../../js/vendor/qrcode.js"></script>
+    <script src="../../js/carnet_qr.js"></script>
+    <script src="../../js/carnet_director.js"></script>
+    <script src="../../js/script.js"></script>
+</body>
+</html>

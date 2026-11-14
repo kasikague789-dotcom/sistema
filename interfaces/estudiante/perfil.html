@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Estudiante</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .perfil-container { display: grid; grid-template-columns: 280px 1fr; gap: 25px; }
+        .perfil-avatar { background: var(--bg-card); border-radius: var(--radio-card); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); padding: 30px 20px; text-align: center; }
+        .perfil-avatar .avatar { width: 110px; height: 110px; border-radius: 50%; background: var(--bg-input); border: 2px solid var(--border-focus); display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--text-primary); margin: 0 auto 15px; }
+        .perfil-avatar .nombre { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+        .perfil-avatar .rol { font-size: 13px; font-weight: 600; color: var(--border-focus); margin-top: 2px; text-transform: capitalize; }
+        .perfil-avatar .cedula { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+        .perfil-avatar .curso-info { font-size: 14px; color: var(--text-primary); margin-top: 15px; font-weight: 500; }
+        .perfil-form { background: var(--bg-card); border-radius: var(--radio-card); box-shadow: var(--shadow-md); border: 1px solid var(--border-color); padding: 30px; }
+        .perfil-form h3 { color: var(--text-primary); margin-bottom: 20px; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .perfil-form .form-group { margin-bottom: 18px; }
+        .perfil-form .form-group label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-weight: 600; font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .perfil-form .form-group input, .perfil-form .form-group select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; background: var(--bg-input); color: var(--text-primary); box-sizing: border-box; }
+        .perfil-form .form-actions { display: flex; gap: 10px; margin-top: 25px; }
+        .perfil-form .form-actions .btn { padding: 12px 30px; }
+        .divider { border: none; border-top: 1px solid var(--border-color); margin: 28px 0; }
+        
+        .modal-verificacion { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-verificacion.active { display: flex; }
+        .modal-verificacion-content { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); max-width: 420px; width: 90%; text-align: center; position: relative; }
+        .btn-cerrar-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: #a0aec0; cursor: pointer; }
+        .modal-verificacion-content h3 { color: #1a202c; margin: 0 0 10px; font-size: 22px; }
+        .modal-verificacion-content p { color: #718096; font-size: 14px; margin-bottom: 20px; }
+        .inputs-codigo { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .inputs-codigo input { width: 50px; height: 60px; text-align: center; font-size: 24px; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px; color: #1a202c; }
+        .inputs-codigo input:focus { outline: none; border-color: #3182ce; background: #f7fafc; }
+        .modal-verificacion-content .btn-verificar { width: 100%; background: #1e3a8a; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .modal-verificacion-content .btn-verificar:disabled { opacity: 0.5; cursor: not-allowed; }
+        .modal-verificacion-content .btn-cancelar-verif { width: 100%; background: transparent; color: #e53e3e; border: 1px solid #fed7d7; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+        .modal-verificacion-content .btn-cancelar-verif:hover { background: #fff5f5; }
+
+        @media (max-width: 768px) { .perfil-container { grid-template-columns: 1fr; } }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Mi Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="perfil.html" class="active"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Mi Perfil</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Gestiona tu información personal</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="user-badge" id="badge-usuario" style="font-size: 13px; font-weight: 600; background: var(--bg-input); padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); color: var(--text-primary);">
+                        Cargando...
+                    </div>
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary); font-size: 13px;">--/--/---- --:--</div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="perfil-container">
+                <div class="perfil-avatar">
+                    <div class="avatar"><i class='bx bx-user'></i></div>
+                    <div class="nombre" id="avatar-nombre">Cargando...</div>
+                    <div class="rol">Estudiante</div>
+                    <div class="cedula" id="avatar-cedula">Cédula: --</div>
+                    <div class="curso-info" id="avatar-curso">Cargando curso...<br><small style="color:var(--text-muted);" id="avatar-nivel"></small></div>
+                    <div style="margin-top:15px; padding-top:15px; border-top:1px solid var(--border-color);">
+                        <small style="color:var(--text-muted);">Miembro desde</small>
+                        <div style="font-size:13px; font-weight: 500; color:var(--text-secondary); margin-top: 2px;" id="avatar-fecha">--/--/----</div>
+                    </div>
+                </div>
+
+                <div class="perfil-form">
+                    <h3><i class='bx bx-edit-alt' style="color: var(--border-focus);"></i> Información Personal</h3>
+                    <form id="formPerfil">
+                        <div class="form-group">
+                            <label for="email"><i class='bx bx-envelope'></i> Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono"><i class='bx bx-phone'></i> Teléfono</label>
+                            <input type="text" id="telefono" name="telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="theme"><i class='bx bx-palette'></i> Tema de la interfaz</label>
+                            <select id="theme" name="theme">
+                                <option value="light">Claro</option>
+                                <option value="dark">Oscuro</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success"><i class='bx bx-save'></i> Guardar Cambios</button>
+                        </div>
+                    </form>
+                    <hr class="divider">
+                    <h3><i class='bx bx-lock-alt' style="color: var(--border-focus);"></i> Cambiar Contraseña</h3>
+                    <div id="alert-pass"></div>
+                    <form id="form-cambiar-password">
+                        <div class="form-group">
+                            <label for="password_actual"><i class='bx bx-key'></i> Contraseña actual</label>
+                            <input type="password" id="password_actual" required autocomplete="current-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="password_nueva"><i class='bx bx-lock'></i> Nueva contraseña (mínimo 6)</label>
+                            <input type="password" id="password_nueva" required minlength="6" autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirmar"><i class='bx bx-check-shield'></i> Confirmar nueva contraseña</label>
+                            <input type="password" id="password_confirmar" required minlength="6" autocomplete="new-password">
+                        </div>
+                        <button type="submit" class="btn btn-warning"><i class='bx bx-refresh'></i> Cambiar contraseña</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL VERIFICAR NUEVO CORREO -->
+    <div id="modalVerificacionEmail" class="modal-verificacion">
+        <div class="modal-verificacion-content">
+            <button class="btn-cerrar-modal" onclick="cerrarModalVerificacionEmail()" title="Cerrar">&times;</button>
+            <h3>Verifica tu nuevo correo</h3>
+            <p id="textoCorreoNuevo">Enviamos un código a tu nuevo correo. Ingrésalo aquí abajo.</p>
+            <div class="inputs-codigo">
+                <input type="text" maxlength="1" id="e1" inputmode="numeric">
+                <input type="text" maxlength="1" id="e2" inputmode="numeric">
+                <input type="text" maxlength="1" id="e3" inputmode="numeric">
+                <input type="text" maxlength="1" id="e4" inputmode="numeric">
+                <input type="text" maxlength="1" id="e5" inputmode="numeric">
+                <input type="text" maxlength="1" id="e6" inputmode="numeric">
+            </div>
+            <button class="btn-verificar" id="btnVerificarEmail" onclick="verificarNuevoEmail()">Confirmar Cambio</button>
+            <button class="btn-cancelar-verif" onclick="cerrarModalVerificacionEmail()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        const usuarioLogueado = window.USUARIO;
+        const userId = usuarioLogueado.id;
+        let payloadPendiente = null;
+
+        const inputsEmail = document.querySelectorAll('#modalVerificacionEmail .inputs-codigo input');
+        inputsEmail.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputsEmail.length - 1) inputsEmail[index + 1].focus();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) inputsEmail[index - 1].focus();
+            });
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        });
+
+        async function cargarDatosPerfil() {
+            try {
+                const res = await fetch(`/api/auth/perfil/${userId}`);
+                if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+                const data = await res.json();
+
+                if (data.estado === 'exitoso' && data.datos) {
+                    const user = data.datos;
+                    
+                    // BLINDAJE TOTAL: Validamos que cada elemento exista antes de escribir
+                    const elNombre = document.getElementById('avatar-nombre');
+                    if (elNombre) elNombre.innerText = `${user.nombre || ''} ${user.apellido || ''}`;
+
+                    const elCedula = document.getElementById('avatar-cedula');
+                    if (elCedula) elCedula.innerText = `Cédula: ${user.cedula || '--'}`;
+
+                    const elBadge = document.getElementById('badge-usuario');
+                    if (elBadge) elBadge.innerText = `${user.nombre || ''} ${user.apellido || ''}`;
+
+                    const elFecha = document.getElementById('avatar-fecha');
+                    if (elFecha) elFecha.innerText = formatearFecha(user.fecha_registro);
+
+                    const elCurso = document.getElementById('avatar-curso');
+                    const elNivel = document.getElementById('avatar-nivel');
+                    if (elCurso) {
+                        if (user.curso_nombre) {
+                            elCurso.innerHTML = `<i class='bx bx-book-open'></i> ${user.curso_nombre} - Sección "${user.curso_seccion || ''}"${user.curso_turno ? ' · ' + user.curso_turno : ''}${user.anio_academico ? ' · Periodo ' + user.anio_academico + '-' + (Number(user.anio_academico) + 1) : ''}`;
+                            if (elNivel) elNivel.innerText = user.curso_nivel || '';
+                        } else {
+                            elCurso.innerHTML = `<i class='bx bx-info-circle'></i> Sin curso asignado`;
+                            if (elNivel) elNivel.innerText = "";
+                        }
+                    }
+
+                    const elEmail = document.getElementById('email');
+                    if (elEmail) elEmail.value = user.email || '';
+
+                    const elTelefono = document.getElementById('telefono');
+                    if (elTelefono) elTelefono.value = user.telefono || '';
+
+                    const elTheme = document.getElementById('theme');
+                    if (elTheme) {
+                        const esOscuro = localStorage.getItem('darkMode') === 'true';
+                        elTheme.value = esOscuro ? 'dark' : 'light';
+                    }
+                }
+            } catch (error) {
+                console.error('Error crítico al cargar perfil:', error);
+            }
+        }
+
+        document.getElementById('formPerfil').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            btn.innerHTML = 'Guardando...';
+            btn.disabled = true;
+
+            const nuevoEmail = document.getElementById('email').value.trim();
+            const nuevoTelefono = document.getElementById('telefono').value.trim();
+            const nuevoTema = document.getElementById('theme').value;
+
+            payloadPendiente = {
+                nombre: usuarioLogueado.nombre,
+                apellido: usuarioLogueado.apellido,
+                email: nuevoEmail,
+                telefono: nuevoTelefono
+            };
+
+            try {
+                const res = await fetch(`/api/auth/perfil/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadPendiente)
+                });
+
+                const data = await res.json();
+                
+                if (data.estado === 'exitoso') {
+                    if (data.requiere_verificacion_cambio) {
+                        document.getElementById('textoCorreoNuevo').innerHTML = `Enviamos un código a <strong>${nuevoEmail}</strong>. Ingrésalo para confirmar.`;
+                        document.getElementById('modalVerificacionEmail').classList.add('active');
+                        inputsEmail.forEach(i => i.value = '');
+                        document.getElementById('e1').focus();
+                    } else {
+                        aplicarTema(nuevoTema);
+                        mostrarAlerta('<i class="bx bx-check-circle"></i> Perfil actualizado correctamente', 'success');
+                        cargarDatosPerfil();
+                    }
+                } else {
+                    mostrarAlerta(`<i class="bx bx-error-circle"></i> ${data.mensaje}`, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                mostrarAlerta('<i class="bx bx-error-circle"></i> Error de conexión', 'error');
+            } finally {
+                btn.innerHTML = "<i class='bx bx-save'></i> Guardar Cambios";
+                btn.disabled = false;
+            }
+        });
+
+        async function verificarNuevoEmail() {
+            let codigo = '';
+            inputsEmail.forEach(i => codigo += i.value);
+
+            if (codigo.length !== 6) {
+                alert('Ingresa los 6 dígitos.');
+                return;
+            }
+
+            const btn = document.getElementById('btnVerificarEmail');
+            btn.textContent = 'Verificando...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/perfil/verificar-nuevo-correo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        id: userId, 
+                        codigo, 
+                        nombre: payloadPendiente.nombre, 
+                        apellido: payloadPendiente.apellido, 
+                        nuevo_email: payloadPendiente.email, 
+                        telefono: payloadPendiente.telefono 
+                    })
+                });
+                const data = await res.json();
+
+                if (data.estado === 'exitoso') {
+                    alert('¡Correo actualizado con éxito!');
+                    cerrarModalVerificacionEmail();
+                    aplicarTema(document.getElementById('theme').value);
+                    cargarDatosPerfil();
+                } else {
+                    alert(data.mensaje);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error al verificar.');
+            } finally {
+                btn.textContent = 'Confirmar Cambio';
+                btn.disabled = false;
+            }
+        }
+
+        function cerrarModalVerificacionEmail() {
+            document.getElementById('modalVerificacionEmail').classList.remove('active');
+            cargarDatosPerfil();
+        }
+
+        function aplicarTema(nuevoTema) {
+            if (nuevoTema === 'dark') {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+
+        document.getElementById('form-cambiar-password').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const caja = document.getElementById('alert-pass');
+            const pinta = (ok, txt) => {
+                const c = ok ? '#34C759' : '#FF3B30';
+                caja.innerHTML = `<div role="alert" style="background:${ok ? 'rgba(52,199,89,.15)' : 'rgba(255,59,48,.15)'}; color:${c}; border:1px solid ${c}; padding:10px 14px; border-radius:10px; margin-bottom:12px; font-size:13px; font-weight:600;"></div>`;
+                caja.firstChild.textContent = txt;
+            };
+            const actual = document.getElementById('password_actual').value;
+            const nueva = document.getElementById('password_nueva').value;
+            const confirmar = document.getElementById('password_confirmar').value;
+            if (nueva.length < 6) return pinta(false, 'La nueva contraseña debe tener al menos 6 caracteres.');
+            if (nueva !== confirmar) return pinta(false, 'Las contraseñas nuevas no coinciden.');
+            const btn = this.querySelector('button');
+            btn.disabled = true;
+            try {
+                const res = await fetch(`/api/auth/cambiar-password/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ actual, nueva })
+                });
+                const data = await res.json().catch(() => ({}));
+                pinta(res.ok, data.mensaje || (res.ok ? 'Contraseña actualizada.' : 'No se pudo cambiar.'));
+                if (res.ok) this.reset();
+            } catch (err) {
+                pinta(false, 'Error de conexión.');
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        function mostrarAlerta(mensaje, tipo) {
+            const alertBox = document.getElementById('alert-container');
+            if (!alertBox) return;
+            const bgColor = tipo === 'success' ? 'rgba(52, 199, 89, 0.15)' : 'rgba(255, 59, 48, 0.15)';
+            const textColor = tipo === 'success' ? '#34C759' : '#FF3B30';
+            alertBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; background:${bgColor}; color:${textColor}; padding:12px 16px; border-radius:10px; margin-bottom:15px; font-size:14px; font-weight:600; border:1px solid ${textColor};"><span style="font-size:20px;">${mensaje}</span></div>`;
+            setTimeout(() => { alertBox.innerHTML = ''; }, 5000);
+        }
+
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return '--/--/----';
+            try {
+                const d = new Date(fechaStr);
+                if (isNaN(d.getTime())) return '--/--/----';
+                return d.toLocaleDateString('es-ES');
+            } catch (e) { return '--/--/----'; }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); }
+            cargarDatosPerfil();
+        });
+    </script>
+    <script src="../../js/script.js"></script>
+</body>
+</html>

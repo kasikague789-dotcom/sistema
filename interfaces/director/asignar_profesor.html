@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Profesores - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .asignacion-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-asignacion {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html" class="active"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Asignar Profesores</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Gestiona qué profesor imparte qué materia en cada sección</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="asignacion-container">
+                <div class="form-asignacion card" style="margin-bottom:0;">
+                    <h3><i class='bx bx-plus-circle' style="color: #34C759;"></i> Asignar Profesor</h3>
+
+                    <div id="secciones-warning" style="display:none;" class="alert alert-warning">
+                        <i class='bx bx-error'></i> No hay secciones creadas.
+                        <a href="gestionar_secciones.html" style="color:var(--border-focus); text-decoration: underline; margin-left: 5px;">Crear secciones primero</a>
+                    </div>
+
+                    <form id="formAsignacion">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="profesor_id"><i class='bx bx-user'></i> Profesor</label>
+                                <select id="profesor_id" name="profesor_id" required>
+                                    <option value="">Seleccione un profesor...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="curso_id"><i class='bx bx-layer'></i> Sección</label>
+                                <select id="curso_id" name="curso_id" required>
+                                    <option value="">Seleccione una sección...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="materia"><i class='bx bx-book'></i> Materia</label>
+                                <input type="text" id="materia" name="materia" required placeholder="Ej: Matemática, Castellano...">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="anio_academico"><i class='bx bx-calendar'></i> Año Académico</label>
+                                <select id="anio_academico" name="anio_academico">
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-submit-asignar" class="btn btn-success" style="width:100%; margin-top: 20px; padding: 12px;">
+                            <i class='bx bx-check'></i> Asignar Profesor
+                        </button>
+                    </form>
+                </div>
+
+                <div class="form-asignacion card" style="margin-bottom:0; height: auto;">
+                    <h3><i class='bx bx-list-ul' style="color: #007AFF;"></i> Asignaciones Actuales</h3>
+                    <div class="table-responsive" style="max-height: 500px; overflow-y: auto; margin-top: 15px;">
+                        <table class="table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Profesor</th>
+                                    <th>Sección / Curso</th>
+                                    <th>Materia</th>
+                                    <th>Año</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contenedor-tabla">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/asignar_profesor.js"></script>
+</body>
+</html>

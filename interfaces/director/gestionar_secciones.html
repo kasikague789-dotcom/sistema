@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Secciones - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <style>
+        
+        .asignacion-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-asignacion, .estudiante-lista {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .tabla-wrapper {
+            overflow-x: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html" class="active"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header>
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1>Gestionar Secciones</h1>
+                        <p>Crea y gestiona las secciones y cursos del sistema</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="asignacion-container">
+                
+                <div class="form-asignacion card" style="margin-bottom:0;">
+                    <h3 id="titulo-form"><i class='bx bx-plus-circle' style="color: #34C759;"></i> Crear Nueva Sección</h3>
+                    <form id="formSeccion">
+                        <input type="hidden" id="seccion_id" value="">
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="nombre"><i class='bx bx-book'></i> Nombre del Curso *</label>
+                                <input type="text" id="nombre" required placeholder="Ej: 1er Grado, 2do Año...">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="nivel"><i class='bx bx-bar-chart-alt-2'></i> Nivel</label>
+                                <select id="nivel">
+                                    <option value="">Seleccione un nivel...</option>
+                                    <option value="Primaria">Primaria</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Téc. Medio">Téc. Medio</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="seccion"><i class='bx bx-font'></i> Sección *</label>
+                                <select id="seccion" required>
+                                    <option value="">Seleccione una sección...</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="turno"><i class='bx bx-sun'></i> Turno</label>
+                                <select id="turno">
+                                    <option value="">Sin definir</option>
+                                    <option value="Mañana">Mañana</option>
+                                    <option value="Tarde">Tarde</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="anio_escolar"><i class='bx bx-calendar'></i> Año Escolar</label>
+                                <select id="anio_escolar"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="grupo-activo" style="display:none; align-items:center; gap:10px; margin-top:15px;">
+                            <input type="checkbox" id="activo" checked style="width:auto;">
+                            <label for="activo" style="margin-bottom:0;">Sección activa</label>
+                        </div>
+
+                        <div style="display:flex; gap:15px; margin-top:20px;">
+                            <button type="submit" id="btn-submit" class="btn btn-success" style="flex:1;">
+                                <i class='bx bx-check'></i> Crear Sección
+                            </button>
+                            <button type="button" id="btn-cancelar" onclick="cancelarEdicion()" class="btn btn-secondary" style="flex:1; display:none;">
+                                <i class='bx bx-x'></i> Cancelar Edición
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                
+                <div class="estudiante-lista card" style="margin-bottom:0; max-height:none;">
+                    <h2><i class='bx bx-list-ul' style="color: #007AFF;"></i> Secciones Registradas</h2>
+                    <div class="tabla-wrapper" style="max-height:500px; overflow-y:auto;">
+                        <table class="table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Curso</th>
+                                    <th>Nivel</th>
+                                    <th>Sección</th>
+                                    <th>Turno</th>
+                                    <th>Año</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/gestionar_secciones.js"></script>
+</body>
+</html>

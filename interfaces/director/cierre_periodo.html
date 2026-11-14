@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cierre de periodo - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        .panel-cierre { background: var(--bg-card); padding: 22px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+        .panel-cierre h2 { margin: 0 0 8px; font-size: 19px; color: var(--text-primary); }
+        .panel-cierre p { color: var(--text-secondary); max-width: 85ch; }
+        .periodo-cambio { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; color: var(--text-primary); margin: 6px 0 4px; }
+        .periodo-cambio i { color: var(--text-secondary); }
+        .aviso-cierre { padding: 12px 14px; border-radius: 10px; background: #fff4e5; color: #8a4b00; font-size: 14px; margin: 12px 0; }
+        .aviso-cierre a { color: #8a4b00; font-weight: 700; }
+        .resumen-cierre { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 0; }
+        .resumen-cierre span { padding: 8px 12px; border-radius: 10px; background: var(--bg-table-hover); font-size: 14px; color: var(--text-primary); }
+        .resumen-cierre strong { font-size: 18px; }
+        .seccion-cierre { border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--bg-card); }
+        .seccion-cierre > summary { cursor: pointer; padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-weight: 700; color: var(--text-primary); min-height: 44px; }
+        .seccion-cierre > summary::-webkit-details-marker { display: none; }
+        .seccion-cierre > summary .flecha { color: var(--text-secondary); font-weight: 600; }
+        .seccion-cierre > summary .chip { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(10, 132, 255, 0.12); color: #0a64c8; }
+        .seccion-cierre > summary .chip.nuevo { background: rgba(255, 149, 0, 0.15); color: #a35f00; }
+        .seccion-cierre .cuerpo { padding: 0 16px 16px; }
+        .destino-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 14px; color: var(--text-secondary); }
+        .destino-fila select, .tabla-cierre select, .form-cierre input { min-height: 40px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); padding: 0 10px; font-size: 14px; }
+        .tabla-cierre { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .tabla-cierre th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-secondary); padding: 8px; border-bottom: 2px solid var(--border-color); }
+        .tabla-cierre td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
+        .tabla-cierre select.repite { border-color: #ff9500; }
+        .tabla-cierre select.egresa { border-color: #34c759; }
+        .acciones-seccion { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .acciones-seccion button { min-height: 36px; }
+        .form-cierre { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 12px; }
+        .form-cierre label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+        .form-cierre input { width: 100%; box-sizing: border-box; min-height: 44px; }
+        .check-cierre { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0; font-size: 14px; color: var(--text-primary); }
+        .check-cierre input { width: 20px; height: 20px; margin-top: 2px; }
+        .btn-cierre { min-height: 48px; padding: 0 22px; border-radius: 10px; border: 0; background: #d70015; color: #fff; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-cierre:hover { background: #b00012; }
+        .btn-cierre:disabled { opacity: 0.45; cursor: not-allowed; }
+        .panel-deshacer { border-left: 4px solid #ff9500; }
+        .panel-deshacer h2 { display: flex; align-items: center; gap: 8px; }
+        .periodo-deshacer { font-size: 18px; }
+        .lista-deshacer { margin: 8px 0 4px; padding-left: 20px; color: var(--text-primary); font-size: 14px; line-height: 1.6; }
+        .btn-deshacer { min-height: 48px; padding: 0 22px; border-radius: 10px; border: 0; background: #c77400; color: #fff; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-deshacer:hover { background: #a35f00; }
+        .btn-deshacer:disabled { opacity: 0.45; cursor: not-allowed; }
+        .tabla-historial { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .tabla-historial th, .tabla-historial td { padding: 10px 8px; border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-primary); }
+        .tabla-historial th { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; }
+        @media (max-width: 600px) { .periodo-cambio { font-size: 18px; } .tabla-cierre th:nth-child(2), .tabla-cierre td:nth-child(2) { display: none; } }
+    </style>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html" class="active"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Cierre de periodo</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Pasar a los estudiantes al año siguiente</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+                        <section class="panel-cierre" aria-labelledby="t-periodo">
+                <h2 id="t-periodo">Periodo escolar</h2>
+                <div class="periodo-cambio"><span id="p-actual">…</span><i class='bx bx-right-arrow-alt' aria-hidden="true"></i><span id="p-siguiente">…</span></div>
+                <p>Revise cada sección: por defecto todos pasan al año siguiente con la misma letra y turno (6to Grado pasa a 1er Año). En 5to Año elija si cada estudiante egresa o pasa a 6to Año. Marque a quienes repiten. Al final se genera un acta en PDF.</p>
+                <div id="aviso-clave" class="aviso-cierre" hidden>Antes de pasar de año configure su <a href="configuracion.html#card-clave-seguridad">clave de seguridad</a> en Configuración.</div>
+                <div class="resumen-cierre" id="resumen-cierre" aria-live="polite"></div>
+            </section>
+
+            <section class="panel-cierre panel-deshacer" id="panel-deshacer" aria-labelledby="t-deshacer" hidden>
+                <h2 id="t-deshacer"><i class='bx bx-undo' aria-hidden="true"></i> Deshacer el último cierre</h2>
+                <div class="periodo-cambio periodo-deshacer"><span id="d-desde">…</span><i class='bx bx-right-arrow-alt' aria-hidden="true"></i><span id="d-hasta">…</span></div>
+                <p id="d-texto"></p>
+                <ul id="d-lista" class="lista-deshacer"></ul>
+                <form id="form-deshacer" autocomplete="off" novalidate>
+                    <div class="form-cierre">
+                        <div><label for="d-password">Su contraseña de entrada</label><input type="password" id="d-password" autocomplete="current-password" required></div>
+                        <div><label for="d-clave">Clave de seguridad</label><input type="password" id="d-clave" autocomplete="off" required></div>
+                        <div><label for="d-frase">Escriba DESHACER</label><input type="text" id="d-frase" autocomplete="off" autocapitalize="characters" required placeholder="DESHACER"></div>
+                    </div>
+                    <div style="margin-top:16px;"><button type="submit" class="btn-deshacer" id="btn-deshacer"><i class='bx bx-undo'></i> <span id="txt-btn-deshacer">Deshacer este cierre</span></button></div>
+                </form>
+            </section>
+
+            <section class="panel-cierre" aria-labelledby="t-secciones">
+                <h2 id="t-secciones">Secciones</h2>
+                <div id="lista-secciones"><p>Cargando…</p></div>
+            </section>
+
+            <section class="panel-cierre" aria-labelledby="t-confirmar">
+                <h2 id="t-confirmar">Confirmar el pase de año</h2>
+                <p>Esto mueve a todos los estudiantes, anula los carnets QR del periodo actual (se imprimen nuevos) y, si lo deja marcado, archiva los horarios y asignaciones de profesores para cargar los nuevos. El historial de asistencia se conserva.</p>
+                <label class="check-cierre"><input type="checkbox" id="chk-archivar" checked> <span>Archivar horarios y asignaciones de profesores del periodo actual (el director carga los del nuevo periodo).</span></label>
+                <form id="form-cierre" autocomplete="off" novalidate>
+                    <div class="form-cierre">
+                        <div><label for="c-password">Su contraseña de entrada</label><input type="password" id="c-password" autocomplete="current-password" required></div>
+                        <div><label for="c-clave">Clave de seguridad <small style="font-weight:400;">(la que creó en Configuración; no es su contraseña)</small></label><input type="password" id="c-clave" autocomplete="off" required></div>
+                        <div><label for="c-frase">Escriba PROMOVER</label><input type="text" id="c-frase" autocomplete="off" autocapitalize="characters" required placeholder="PROMOVER"></div>
+                    </div>
+                    <div style="margin-top:16px;"><button type="submit" class="btn-cierre" id="btn-cierre"><i class='bx bx-transfer'></i> <span id="txt-btn-cierre">Pasar al periodo siguiente</span></button></div>
+                    <div id="nota-clave" class="aviso-cierre" hidden>Falta crear su clave de seguridad. Vaya a <a href="configuracion.html#card-clave-seguridad">Configuración &gt; Clave de seguridad del director</a>, créela y vuelva aquí.</div>
+                </form>
+            </section>
+
+            <section class="panel-cierre" aria-labelledby="t-historial">
+                <h2 id="t-historial">Actas anteriores</h2>
+                <div id="historial"><p>Cargando…</p></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/cierre_periodo.js"></script>
+</body>
+</html>

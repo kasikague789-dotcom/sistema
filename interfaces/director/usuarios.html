@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html" class="active"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header>
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1>Gestión de Usuarios</h1>
+                        <p>Administra y visualiza todos los usuarios del sistema</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="contenedor-alerta" style="display:none;"></div>
+
+            <div class="stats-grid-custom">
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-blue"><i class='bx bx-group'></i></div>
+                    <div class="numero" id="stat-total">0</div><div class="etiqueta">Total</div>
+                </div>
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-purple"><i class='bx bx-briefcase'></i></div>
+                    <div class="numero" id="stat-directores">0</div><div class="etiqueta">Directores</div>
+                </div>
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-indigo"><i class='bx bx-chalkboard'></i></div>
+                    <div class="numero" id="stat-profesores">0</div><div class="etiqueta">Profesores</div>
+                </div>
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-teal"><i class='bx bxs-graduation'></i></div>
+                    <div class="numero" id="stat-estudiantes">0</div><div class="etiqueta">Estudiantes</div>
+                </div>
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-orange"><i class='bx bx-user-circle'></i></div>
+                    <div class="numero" id="stat-representantes">0</div><div class="etiqueta">Representantes</div>
+                </div>
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-green"><i class='bx bx-check-circle'></i></div>
+                    <div class="numero" id="stat-activos">0</div><div class="etiqueta">Activos</div>
+                </div>
+                <div class="stat-card-custom">
+                    <div class="stat-icon icon-red"><i class='bx bx-x-circle'></i></div>
+                    <div class="numero" id="stat-inactivos">0</div><div class="etiqueta">Inactivos</div>
+                </div>
+            </div>
+
+            <div class="filtros-container">
+                <form id="form-filtros" class="filtros-form" onsubmit="event.preventDefault(); aplicarFiltros();">
+                    <div class="grupo">
+                        <label for="busqueda"><i class='bx bx-search'></i> Buscar</label>
+                        <input type="text" id="busqueda" placeholder="Nombre, cédula o email..." oninput="aplicarFiltros()">
+                    </div>
+                    <div class="grupo">
+                        <label for="rol"><i class='bx bx-user'></i> Rol</label>
+                        <select id="rol" onchange="aplicarFiltros()">
+                            <option value="todos">Todos</option>
+                            <option value="director">Director</option>
+                            <option value="profesor">Profesor</option>
+                            <option value="estudiante">Estudiante</option>
+                            <option value="representante">Representante</option>
+                        </select>
+                    </div>
+                    <div class="grupo">
+                        <label for="seccion"><i class='bx bx-layer'></i> Sección</label>
+                        <select id="seccion" onchange="aplicarFiltros()">
+                            <option value="todos">Todas</option>
+                        </select>
+                    </div>
+                    <div class="grupo">
+                        <label for="estado"><i class='bx bx-toggle-right'></i> Estado</label>
+                        <select id="estado" onchange="aplicarFiltros()">
+                            <option value="todos">Todos</option>
+                            <option value="activo">Activos</option>
+                            <option value="inactivo">Inactivos</option>
+                        </select>
+                    </div>
+                    <div class="acciones">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 18px;"><i class='bx bx-filter-alt'></i> Filtrar</button>
+                        <button type="button" onclick="limpiarFiltros()" class="btn btn-secondary" style="padding: 10px 18px;"><i class='bx bx-reset'></i> Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tabla-wrapper">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Sección</th>
+                            <th title="Faltas del periodo escolar actual">Faltas</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-usuarios-body">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="modalAsignar" class="modal-asignacion">
+        <div class="modal-asignacion-content">
+            <div class="header-modal">
+                <h3 id="modalAsignarTitulo"><i class='bx bx-book-bookmark' style="color: #007AFF;"></i> Asignar Sección</h3>
+                <button class="cerrar-modal" onclick="cerrarModalAsignar()">&times;</button>
+            </div>
+            <form onsubmit="event.preventDefault(); guardarAsignacionSeccion();">
+                <input type="hidden" id="estudiante_id">
+                <div id="infoEstudiante">
+                    <strong>Estudiante:</strong> <span id="nombreEstudiante"></span>
+                </div>
+                <div class="form-group">
+                    <label for="curso_id"><i class='bx bx-layer'></i> Sección</label>
+                    <select id="curso_id" required>
+                        <option value="">Seleccione una sección...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="anio_academico"><i class='bx bx-calendar'></i> Año Académico</label>
+                    <select id="anio_academico"></select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-success"><i class='bx bx-check'></i> Asignar</button>
+                    <button type="button" onclick="cerrarModalAsignar()" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/usuarios.js"></script>
+</body>
+</html>

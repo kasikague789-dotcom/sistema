@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Asistencia - Estudiante</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li><a href="asistencia.html" class="active"><i class='bx bx-check-shield'></i> Mi Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px;">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Mi Asistencia</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Consulta tu historial de asistencia y reportes de inasistencias</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="stats-grid-estudiante">
+                <div class="stat-card-estudiante presente">
+                    <div class="icon"><i class='bx bx-check-circle' style="color: #34C759;"></i></div>
+                    <div class="numero" id="stat-presentes">0</div>
+                    <div class="etiqueta">Presentes</div>
+                </div>
+                <div class="stat-card-estudiante tarde">
+                    <div class="icon"><i class='bx bx-time' style="color: #FF9500;"></i></div>
+                    <div class="numero" id="stat-tardes">0</div>
+                    <div class="etiqueta">Retardos</div>
+                </div>
+                <div class="stat-card-estudiante ausente">
+                    <div class="icon"><i class='bx bx-x-circle' style="color: #FF3B30;"></i></div>
+                    <div class="numero" id="stat-ausentes">0</div>
+                    <div class="etiqueta">Ausencias</div>
+                </div>
+                <div class="stat-card-estudiante justificado">
+                    <div class="icon"><i class='bx bx-file-blank' style="color: #007AFF;"></i></div>
+                    <div class="numero" id="stat-justificados">0</div>
+                    <div class="etiqueta">Justificadas</div>
+                </div>
+            </div>
+
+            <div class="tabla-wrapper">
+                <table class="table tabla-asistencia">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Materia</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Observaciones del Profesor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                        <tr><td colspan="4" style="text-align:center; padding:20px;">Cargando tu información...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/asistencia_estudiante.js"></script>
+</body>
+</html>

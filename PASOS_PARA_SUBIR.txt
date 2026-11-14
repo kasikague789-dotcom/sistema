@@ -1,0 +1,85 @@
+PASOS PARA SUBIR ESTA VERSIÓN (12/11/2026)
+Sistema de Asistencia - U.E. Instituto Elena de Bueno
+==========================================================
+
+Lo que trae: carnet QR, escanear carnets con la cámara del teléfono (en vivo),
+turnos, clase no dada y suplentes, cierre de periodo (pasar de año) y deshacerlo,
+recuperar contraseña y clave de seguridad, pantallas arregladas para teléfono.
+Todo está explicado en CAMBIOS.md.
+Probado 3 veces (lógica, pantallas y como en Clever Cloud): 0 errores.
+
+
+1. ANTES DE SUBIR: RESPALDO DE LA BASE
+--------------------------------------
+En Clever Cloud > su base MySQL > phpMyAdmin > Exportar > Continuar.
+Guarde ese archivo .sql. (Es por si acaso; la actualización no borra nada.)
+
+
+2. COPIAR LOS ARCHIVOS
+----------------------
+- Descomprima sistema_web_github.zip ENCIMA de la carpeta del proyecto
+  (la que está conectada a GitHub). Cuando pregunte, elija "Reemplazar".
+- NO borre su archivo .env (no viene en el zip y no se sube: .gitignore lo protege).
+
+
+3. SUBIR A GITHUB
+-----------------
+Con GitHub Desktop: escriba un resumen (ej. "Version 12/11: carnet QR y escaner") > Commit > Push.
+O en la terminal, dentro de la carpeta:
+    git add .
+    git commit -m "Version 12/11: carnet QR, escaner y cierre de periodo"
+    git push
+Revise que en la lista NO salgan: .env, .session_secret, node_modules, certificado_local.
+
+
+4. CLEVER CLOUD: VARIABLES
+--------------------------
+En la aplicación > Environment variables, revise que estén:
+- SESSION_SECRET  -> NUEVA. Un texto largo al azar (40 letras y números o más).
+                     Sin esto, cada vez que se publica se cierran las sesiones de todos.
+- EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, EMAIL_FROM
+                  -> las mismas del correo que ya usan (para los códigos de recuperación).
+- MYSQL_ADDON_...  -> las pone sola la base de Clever Cloud. No tocar.
+NO agregue HTTPS_PUERTO (eso es solo para probar en una PC; Clever Cloud ya tiene https).
+Guarde los cambios y reinicie la aplicación (Restart) para que los use.
+
+
+5. REVISAR QUE ARRANCÓ
+----------------------
+Clever Cloud publica solo después del push. En Logs debe salir:
+    Versión 2026-12 aplicada (... cambios nuevos)
+    Versión 2026-13 aplicada: clase no dada y suplencias.
+    Servidor corriendo en ...
+(Si la base ya estaba actualizada, no salen las dos primeras: está bien.)
+Si sale "ERROR: No se pudo preparar la base de datos", revise las variables MYSQL_ADDON_...
+
+
+6. PRIMEROS PASOS EN LA WEB (director)
+--------------------------------------
+1. Mi perfil: cambie la contraseña del director.
+2. Configuración > Clave de seguridad: cree una (mínimo 8, distinta a la contraseña).
+   Se pide para pasar de año. Solo el director la sabe.
+3. Configuración: minutos de tolerancia (por defecto 10) y hora de cambio de turno (12:30).
+4. Gestionar Secciones: ponga el turno (Mañana / Tarde) a cada sección.
+5. Horarios: cargue las clases. Ojo AM/PM: 12:00 PM es mediodía, 12:00 AM es medianoche.
+6. Carnets QR: imprima o descargue los QR de cada sección.
+Si la base se cargó con base_de_datos/sistema_asistencia.sql, trae cuentas de prueba:
+desactívelas o bórrelas (Usuarios).
+
+
+7. ESCANEAR CON EL TELÉFONO
+---------------------------
+Profesor > Inicio > "Escanear QR" (en la clase de ahora). Permita la cámara.
+Apunte al QR del carnet: lee solo, suena y marca Presente (o Tarde). Siga con el próximo.
+Solo funciona en la lista de HOY y dentro del turno de la sección.
+
+
+8. SI ALGO SALE MAL
+-------------------
+- Para volver a la versión anterior: "git revert HEAD" y "git push"
+  (o en GitHub Desktop: clic derecho en el último commit > Revert changes > Push).
+  La base no hay que tocarla: lo nuevo solo AGREGÓ columnas y tablas.
+- Si perdió la contraseña del director o la clave de seguridad: herramienta
+  recuperar_acceso.js (se corre en una PC con el .env de la base). Ver CAMBIOS.md.
+- Los adjuntos de las justificaciones (carpeta uploads/) se borran en cada publicación
+  de Clever Cloud. Para guardarlos, conecte un "FS Bucket" a esa carpeta.

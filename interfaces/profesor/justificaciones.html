@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justificaciones - Profesor</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li>
+                    <div class="toggle-submenu" onclick="toggleSubmenu(this)">
+                        <span><i class='bx bx-book-open'></i> Mis Secciones</span>
+                        <span class="arrow"><i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <ul class="submenu" id="submenu-secciones"></ul>
+                </li>
+                <li>
+                    <a href="justificaciones.html" class="active">
+                        <i class='bx bx-file'></i> Justificaciones
+                        <span id="badge-justificaciones-menu" class="badge-menu" style="background:#fc8181; color:white; padding:1px 8px; border-radius:10px; font-size:10px; margin-left:5px; display:none;">0</span>
+                    </a>
+                </li>
+                <li><a href="reportes.html"><i class='bx bx-bar-chart-alt-2'></i> Reportes</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Justificaciones</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Gestiona las justificaciones de tus estudiantes</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="contenedor-alerta"></div>
+
+            <div class="stats-justificaciones">
+                <div class="stat-just total">
+                    <i class='bx bx-list-ul icono' style="color: #718096;"></i>
+                    <div class="numero" id="stat-total">0</div>
+                    <div class="etiqueta">Total</div>
+                </div>
+                <div class="stat-just pendiente">
+                    <i class='bx bx-time-five icono' style="color: #ed8936;"></i>
+                    <div class="numero" id="stat-pendientes">0</div>
+                    <div class="etiqueta">Pendientes</div>
+                </div>
+                <div class="stat-just aprobada">
+                    <i class='bx bx-check-circle icono' style="color: #48bb78;"></i>
+                    <div class="numero" id="stat-aprobadas">0</div>
+                    <div class="etiqueta">Aprobadas</div>
+                </div>
+                <div class="stat-just rechazada">
+                    <i class='bx bx-x-circle icono' style="color: #fc8181;"></i>
+                    <div class="numero" id="stat-rechazadas">0</div>
+                    <div class="etiqueta">Rechazadas</div>
+                </div>
+            </div>
+
+            <div class="filtros-container">
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-success" onclick="abrirModalSolicitar()">
+                        <i class='bx bx-plus-circle'></i> Solicitar Justificación
+                    </button>
+                </div>
+                <form id="form-filtros" class="filtros-form" onsubmit="aplicarFiltros(event)">
+                    <div class="grupo">
+                        <label for="filtro-estado"><i class='bx bx-filter'></i> Estado</label>
+                        <select id="filtro-estado" onchange="aplicarFiltros(event)">
+                            <option value="todos">Todos</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="aprobada">Aprobadas</option>
+                            <option value="rechazada">Rechazadas</option>
+                        </select>
+                    </div>
+                    <div class="grupo" style="flex:2;">
+                        <label for="filtro-busqueda"><i class='bx bx-search'></i> Buscar</label>
+                        <input type="text" id="filtro-busqueda" placeholder="Nombre o cédula..." oninput="aplicarFiltros(event)">
+                    </div>
+                    <div class="grupo acciones" style="flex:0; align-items: flex-end; padding-bottom: 2px;">
+                        <button type="submit" class="btn btn-info"><i class='bx bx-search-alt-2'></i> Filtrar</button>
+                        <button type="button" onclick="restablecerFiltros()" class="btn btn-secondary" title="Restablecer filtros"><i class='bx bx-refresh'></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="contenedor-justificaciones">Cargando...</div>
+        </main>
+    </div>
+
+    <div id="modalSolicitar" class="modal-just">
+        <div class="modal-just-content">
+            <div class="header-modal">
+                <h3><i class='bx bx-plus-circle' style="color: var(--border-focus);"></i> Solicitar Justificación</h3>
+                <button class="cerrar-modal" onclick="cerrarModalSolicitar()"><i class='bx bx-x'></i></button>
+            </div>
+            <form id="form-solicitar-justificacion" onsubmit="procesarSolicitud(event)">
+                <div class="form-group">
+                    <label for="estudiante_id"><i class='bx bx-user'></i> Estudiante</label>
+                    <select id="estudiante_id" required>
+                        <option value="">Cargando estudiantes...</option>
+                    </select>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div class="form-group">
+                        <label for="fecha_inicio"><i class='bx bx-calendar'></i> Fecha Inicio</label>
+                        <input type="date" id="fecha_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin"><i class='bx bx-calendar-check'></i> Fecha Fin</label>
+                        <input type="date" id="fecha_fin" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tipo"><i class='bx bx-category'></i> Tipo de Justificación</label>
+                    <select id="tipo" required>
+                        <option value="medica">Médica</option>
+                        <option value="personal">Personal</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="deportiva">Deportiva</option>
+                        <option value="academica">Académica</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion"><i class='bx bx-text'></i> Descripción</label>
+                    <textarea id="descripcion" placeholder="Describe el motivo de la justificación..." required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-success"><i class='bx bx-send'></i> Enviar Solicitud</button>
+                    <button type="button" onclick="cerrarModalSolicitar()" class="btn btn-secondary"><i class='bx bx-x'></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/profesor_justificaciones.js"></script>
+    <script src="../../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Profesor</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .perfil-container { display: grid; grid-template-columns: 280px 1fr; gap: 25px; }
+        .perfil-avatar { background: var(--bg-card); border-radius: var(--radio-card); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); padding: 30px 20px; text-align: center; }
+        .perfil-avatar .avatar { width: 110px; height: 110px; border-radius: 50%; background: var(--bg-input); border: 2px solid var(--border-focus); display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--text-primary); margin: 0 auto 15px; }
+        .perfil-avatar .nombre { font-size: 20px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
+        .perfil-avatar .rol { font-size: 13px; font-weight: 600; color: var(--border-focus); margin-top: 2px; text-transform: capitalize; }
+        .perfil-avatar .cedula { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+        .perfil-form { background: var(--bg-card); border-radius: var(--radio-card); box-shadow: var(--shadow-md); border: 1px solid var(--border-color); padding: 30px; }
+        .perfil-form h3 { color: var(--text-primary); margin-bottom: 20px; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .perfil-form .form-group { margin-bottom: 18px; }
+        .perfil-form .form-group label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-weight: 600; font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .perfil-form .form-group input, .perfil-form .form-group select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; background: var(--bg-input); color: var(--text-primary); transition: all 0.3s ease; box-sizing: border-box; }
+        .perfil-form .form-group input:focus, .perfil-form .form-group select:focus { border-color: var(--border-focus); outline: none; background: var(--bg-card); box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15); }
+        .perfil-form .form-actions { display: flex; gap: 10px; margin-top: 25px; }
+        .perfil-form .form-actions .btn { padding: 12px 30px; }
+        .divider { border: none; border-top: 1px solid var(--border-color); margin: 28px 0; }
+        
+        .modal-verificacion { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-verificacion.active { display: flex; }
+        .modal-verificacion-content { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 24px 60px rgba(0,0,0,0.3); max-width: 420px; width: 90%; text-align: center; position: relative; }
+        .btn-cerrar-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: #a0aec0; cursor: pointer; }
+        .modal-verificacion-content h3 { color: #1a202c; margin: 0 0 10px; font-size: 22px; }
+        .modal-verificacion-content p { color: #718096; font-size: 14px; margin-bottom: 20px; }
+        .inputs-codigo { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .inputs-codigo input { width: 50px; height: 60px; text-align: center; font-size: 24px; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px; color: #1a202c; }
+        .inputs-codigo input:focus { outline: none; border-color: #3182ce; background: #f7fafc; }
+        .modal-verificacion-content .btn-verificar { width: 100%; background: #1e3a8a; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .modal-verificacion-content .btn-verificar:disabled { opacity: 0.5; cursor: not-allowed; }
+        .modal-verificacion-content .btn-cancelar-verif { width: 100%; background: transparent; color: #e53e3e; border: 1px solid #fed7d7; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+        .modal-verificacion-content .btn-cancelar-verif:hover { background: #fff5f5; }
+
+        @media (max-width: 768px) { .perfil-container { grid-template-columns: 1fr; } }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li>
+                    <div class="toggle-submenu" onclick="toggleSubmenu(this)">
+                        <span><i class='bx bx-book-open'></i> Mis Secciones</span>
+                        <span class="arrow"><i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <ul class="submenu" id="submenu-secciones"></ul>
+                </li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="reportes.html"><i class='bx bx-bar-chart-alt-2'></i> Reportes</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="perfil.html" class="active"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Mi Perfil</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Gestiona tu información personal</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+                        <span class="label-icon" id="darkModeIcon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="contenedor-alertas"></div>
+
+            <div class="perfil-container">
+                <div class="perfil-avatar">
+                    <div class="avatar"><i class='bx bx-user-pin'></i></div>
+                    <div class="nombre" id="card-nombre-completo">Cargando...</div>
+                    <div class="rol" id="card-rol">Profesor</div>
+                    <div class="cedula" id="card-cedula">Cédula: --</div>
+                    <div style="margin-top:15px; padding-top:15px; border-top:1px solid var(--border-color);">
+                        <small style="color:var(--text-muted);">Miembro desde</small>
+                        <div style="font-size:13px; color:var(--text-secondary);" id="card-fecha-registro">--/--/----</div>
+                    </div>
+                </div>
+
+                <div class="perfil-form">
+                    <h3><i class='bx bx-user' style="color: var(--border-focus);"></i> Información Personal</h3>
+                    <form id="form-datos-perfil" onsubmit="guardarDatosPerfil(event)">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                            <div class="form-group">
+                                <label for="nombre"><i class='bx bx-id-card'></i> Nombre</label>
+                                <input type="text" id="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="apellido"><i class='bx bx-id-card'></i> Apellido</label>
+                                <input type="text" id="apellido" required>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                            <div class="form-group">
+                                <label for="email"><i class='bx bx-envelope'></i> Email</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono"><i class='bx bx-phone'></i> Teléfono</label>
+                                <input type="text" id="telefono">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success"><i class='bx bx-save'></i> Guardar Cambios</button>
+                        </div>
+                    </form>
+
+                    <hr class="divider">
+
+                    <h3><i class='bx bx-lock-alt' style="color: var(--border-focus);"></i> Cambiar Contraseña</h3>
+                    <div id="contenedor-alertas-pass"></div>
+                    <form id="form-cambiar-password" onsubmit="cambiarPassword(event)">
+                        <div class="form-group">
+                            <label for="password_actual"><i class='bx bx-key'></i> Contraseña Actual</label>
+                            <input type="password" id="password_actual" required placeholder="Ingresa tu contraseña actual">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                            <div class="form-group">
+                                <label for="password_nueva"><i class='bx bx-lock'></i> Nueva Contraseña</label>
+                                <input type="password" id="password_nueva" required placeholder="Mínimo 6 caracteres">
+                            </div>
+                            <div class="form-group">
+                                <label for="password_confirmar"><i class='bx bx-check-shield'></i> Confirmar Contraseña</label>
+                                <input type="password" id="password_confirmar" required placeholder="Repite la contraseña">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-warning"><i class='bx bx-refresh'></i> Cambiar Contraseña</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL VERIFICAR NUEVO CORREO -->
+    <div id="modalVerificacionEmail" class="modal-verificacion">
+        <div class="modal-verificacion-content">
+            <button class="btn-cerrar-modal" onclick="cerrarModalVerificacionEmail()" title="Cerrar">&times;</button>
+            <h3>Verifica tu nuevo correo</h3>
+            <p id="textoCorreoNuevo">Enviamos un código a tu nuevo correo. Ingrésalo aquí abajo.</p>
+            <div class="inputs-codigo">
+                <input type="text" maxlength="1" id="e1" inputmode="numeric">
+                <input type="text" maxlength="1" id="e2" inputmode="numeric">
+                <input type="text" maxlength="1" id="e3" inputmode="numeric">
+                <input type="text" maxlength="1" id="e4" inputmode="numeric">
+                <input type="text" maxlength="1" id="e5" inputmode="numeric">
+                <input type="text" maxlength="1" id="e6" inputmode="numeric">
+            </div>
+            <button class="btn-verificar" id="btnVerificarEmail" onclick="verificarNuevoEmail()">Confirmar Cambio</button>
+            <button class="btn-cancelar-verif" onclick="cerrarModalVerificacionEmail()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        const usuarioLogueado = window.USUARIO; 
+        if (!usuarioLogueado) { window.location.href = '../../login.html'; }
+        const userId = usuarioLogueado.id;
+        let payloadPendiente = null;
+
+        const inputsEmail = document.querySelectorAll('#modalVerificacionEmail .inputs-codigo input');
+        inputsEmail.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputsEmail.length - 1) inputsEmail[index + 1].focus();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) inputsEmail[index - 1].focus();
+            });
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        });
+
+        function actualizarReloj() {
+            const ahora = new Date();
+            const elClock = document.getElementById('live-clock');
+            if (elClock) elClock.innerText = ahora.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        async function cargarSubmenuSecciones() {
+            try {
+                const response = await fetch(`/api/profesores/mis-secciones/${userId}`);
+                if (!response.ok) return;
+                const result = await response.json();
+                const ul = document.getElementById('submenu-secciones');
+                if (!ul) return;
+                ul.innerHTML = '';
+                (result.datos || []).forEach(s => {
+                    ul.innerHTML += `<li><a href="secciones.html#seccion-${s.curso_id}">${escapeHTML(s.materia)} - ${escapeHTML(s.curso_nombre)} ${escapeHTML(s.seccion + (s.turno ? ' · ' + s.turno : ''))}</a></li>`;
+                });
+            } catch (e) { console.error("Error al cargar submenú:", e); }
+        }
+
+        async function cargarDatosPerfil() {
+            try {
+                const res = await fetch(`/api/auth/perfil/${userId}`);
+                const data = await res.json();
+
+                if (data.estado === 'exitoso') {
+                    const user = data.datos;
+                    
+                    const elNombre = document.getElementById('card-nombre-completo');
+                    if (elNombre) elNombre.innerText = `${user.nombre} ${user.apellido}`;
+                    
+                    const elRol = document.getElementById('card-rol');
+                    if (elRol) elRol.innerText = user.rol;
+                    
+                    const elCedula = document.getElementById('card-cedula');
+                    if (elCedula) elCedula.innerText = `Cédula: ${user.cedula}`;
+                    
+                    const elFecha = document.getElementById('card-fecha-registro');
+                    if (elFecha) elFecha.innerText = formatearFecha(user.fecha_registro);
+
+                    const elInputNombre = document.getElementById('nombre');
+                    if (elInputNombre) elInputNombre.value = user.nombre;
+
+                    const elInputApellido = document.getElementById('apellido');
+                    if (elInputApellido) elInputApellido.value = user.apellido;
+
+                    const elInputEmail = document.getElementById('email');
+                    if (elInputEmail) elInputEmail.value = user.email || '';
+
+                    const elInputTelefono = document.getElementById('telefono');
+                    if (elInputTelefono) elInputTelefono.value = user.telefono || '';
+                }
+            } catch (error) {
+                console.error('Error al cargar perfil:', error);
+            }
+        }
+
+        async function guardarDatosPerfil(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerHTML = 'Guardando...';
+            btn.disabled = true;
+
+            payloadPendiente = {
+                nombre: document.getElementById('nombre').value.trim(),
+                apellido: document.getElementById('apellido').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('telefono').value.trim()
+            };
+
+            try {
+                const res = await fetch(`/api/auth/perfil/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadPendiente)
+                });
+                const data = await res.json();
+
+                if (data.estado === 'exitoso') {
+                    if (data.requiere_verificacion_cambio) {
+                        document.getElementById('textoCorreoNuevo').innerHTML = `Enviamos un código a <strong>${payloadPendiente.email}</strong>. Ingrésalo para confirmar.`;
+                        document.getElementById('modalVerificacionEmail').classList.add('active');
+                        inputsEmail.forEach(i => i.value = '');
+                        document.getElementById('e1').focus();
+                    } else {
+                        mostrarAlerta('contenedor-alertas', "<i class='bx bx-check-circle'></i> " + data.mensaje, 'success');
+                        usuarioLogueado.nombre = payloadPendiente.nombre;
+                        usuarioLogueado.apellido = payloadPendiente.apellido;
+                        localStorage.setItem('usuario', JSON.stringify(usuarioLogueado));
+                        cargarDatosPerfil();
+                    }
+                } else {
+                    mostrarAlerta('contenedor-alertas', "<i class='bx bx-error-circle'></i> " + data.mensaje, 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                mostrarAlerta('contenedor-alertas', "<i class='bx bx-error-circle'></i> Error de conexión", 'error');
+            } finally {
+                btn.innerHTML = "<i class='bx bx-save'></i> Guardar Cambios";
+                btn.disabled = false;
+            }
+        }
+
+        async function verificarNuevoEmail() {
+            let codigo = '';
+            inputsEmail.forEach(i => codigo += i.value);
+            if (codigo.length !== 6) { alert('Ingresa los 6 dígitos.'); return; }
+
+            const btn = document.getElementById('btnVerificarEmail');
+            btn.textContent = 'Verificando...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/perfil/verificar-nuevo-correo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        id: userId, 
+                        codigo, 
+                        nombre: payloadPendiente.nombre, 
+                        apellido: payloadPendiente.apellido, 
+                        nuevo_email: payloadPendiente.email, 
+                        telefono: payloadPendiente.telefono 
+                    })
+                });
+                const data = await res.json();
+
+                if (data.estado === 'exitoso') {
+                    alert('¡Correo actualizado con éxito!');
+                    cerrarModalVerificacionEmail();
+                    cargarDatosPerfil();
+                } else {
+                    alert(data.mensaje);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error al verificar.');
+            } finally {
+                btn.textContent = 'Confirmar Cambio';
+                btn.disabled = false;
+            }
+        }
+
+        function cerrarModalVerificacionEmail() {
+            document.getElementById('modalVerificacionEmail').classList.remove('active');
+            cargarDatosPerfil();
+        }
+
+        async function cambiarPassword(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const actual = document.getElementById('password_actual').value;
+            const nueva = document.getElementById('password_nueva').value;
+            const confirmar = document.getElementById('password_confirmar').value;
+
+            if (nueva !== confirmar) {
+                mostrarAlerta('contenedor-alertas-pass', "<i class='bx bx-error-circle'></i> Las contraseñas nuevas no coinciden", 'error');
+                return;
+            }
+            if (nueva.length < 6) {
+                mostrarAlerta('contenedor-alertas-pass', "<i class='bx bx-error-circle'></i> La nueva contraseña debe tener al menos 6 caracteres", 'error');
+                return;
+            }
+
+            btn.innerHTML = 'Cambiando...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`/api/auth/cambiar-password/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ actual, nueva })
+                });
+                const data = await res.json();
+
+                if (data.estado === 'exitoso') {
+                    mostrarAlerta('contenedor-alertas-pass', "<i class='bx bx-check-circle'></i> " + data.mensaje, 'success');
+                    document.getElementById('form-cambiar-password').reset();
+                } else {
+                    mostrarAlerta('contenedor-alertas-pass', "<i class='bx bx-error-circle'></i> " + data.mensaje, 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                mostrarAlerta('contenedor-alertas-pass', "<i class='bx bx-error-circle'></i> Error de conexión", 'error');
+            } finally {
+                btn.innerHTML = "<i class='bx bx-refresh'></i> Cambiar Contraseña";
+                btn.disabled = false;
+            }
+        }
+
+        function mostrarAlerta(contenedorId, mensaje, tipo) {
+            const cont = document.getElementById(contenedorId);
+            if (!cont) return;
+            const bgColor = tipo === 'success' ? 'rgba(52, 199, 89, 0.15)' : 'rgba(255, 59, 48, 0.15)';
+            const textColor = tipo === 'success' ? '#34C759' : '#FF3B30';
+            cont.innerHTML = `<div style="display:flex; align-items:center; gap:8px; background:${bgColor}; color:${textColor}; padding:12px 16px; border-radius:10px; margin-bottom:15px; font-size:13px; font-weight:600; border:1px solid ${textColor};"><span style="font-size:18px;">${mensaje}</span></div>`;
+            setTimeout(() => { cont.innerHTML = ''; }, 5000);
+        }
+
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return '--/--/----';
+            const d = new Date(fechaStr);
+            return d.toLocaleDateString('es-ES');
+        }
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            actualizarReloj();
+            setInterval(actualizarReloj, 60000);
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                const icon = document.getElementById('darkModeIcon');
+                if (icon) icon.innerHTML = "<i class='bx bx-sun'></i>";
+            }
+            cargarDatosPerfil();
+            cargarSubmenuSecciones();
+        });
+    </script>
+    <script src="../../js/script.js"></script>
+</body>
+</html>

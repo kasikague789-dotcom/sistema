@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Justificaciones - Estudiante</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        /* ESTILOS PARA LAS TARJETAS Y EL BOTÓN DE REVOCAR */
+        .justificacion-card {
+            background: var(--bg-card);
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #718096;
+        }
+        .justificacion-card.pendiente { border-left-color: #ed8936; }
+        .justificacion-card.aprobada { border-left-color: #48bb78; }
+        .justificacion-card.rechazada { border-left-color: #fc8181; }
+        
+        .justificacion-card .header-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .justificacion-card .detalle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            background: var(--bg-table-hover);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .justificacion-card .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; }
+        .justificacion-card .value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        
+        .badge-estado {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-estado.pendiente { background: #feebc8; color: #c05621; }
+        .badge-estado.aprobada { background: #c6f6d5; color: #22543d; }
+        .badge-estado.rechazada { background: #fed7d7; color: #822727; }
+
+        .observaciones-director {
+            background: rgba(66, 153, 225, 0.1);
+            border-left: 3px solid #4299e1;
+            padding: 10px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 10px;
+        }
+
+        /* ESTILO DEL BOTÓN DE REVOCAR */
+        .btn-revocar {
+            background: #fff5f5; 
+            color: #e53e3e; 
+            border: 1px solid #fed7d7; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            transition: all 0.2s ease;
+        }
+        .btn-revocar:hover {
+            background: #fed7d7;
+            border-color: #feb2b2;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Mi Asistencia</a></li>
+                <li><a href="justificaciones.html" class="active"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px;">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin:0; font-size:24px; font-weight:700; color:var(--text-primary);">Mis Justificaciones</h1>
+                        <p style="color:var(--text-secondary); margin:4px 0 0 0; font-size:14px;">Solicita y visualiza tus justificaciones</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="stats-justificaciones">
+                <div class="stat-just total">
+                    <div class="icono"><i class='bx bx-file-blank' style="color: #718096;"></i></div>
+                    <div class="numero">0</div>
+                    <div class="etiqueta">Total</div>
+                </div>
+                <div class="stat-just pendiente">
+                    <div class="icono"><i class='bx bx-time' style="color: #ed8936;"></i></div>
+                    <div class="numero">0</div>
+                    <div class="etiqueta">Pendientes</div>
+                </div>
+                <div class="stat-just aprobada">
+                    <div class="icono"><i class='bx bx-check-circle' style="color: #48bb78;"></i></div>
+                    <div class="numero">0</div>
+                    <div class="etiqueta">Aprobadas</div>
+                </div>
+                <div class="stat-just rechazada">
+                    <div class="icono"><i class='bx bx-x-circle' style="color: #fc8181;"></i></div>
+                    <div class="numero">0</div>
+                    <div class="etiqueta">Rechazadas</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="btn btn-success" onclick="abrirModalSolicitar()">
+                    <i class='bx bx-plus-circle'></i> Solicitar Justificación
+                </button>
+            </div>
+
+            <div id="contenedor-justificaciones">
+            </div>
+        </main>
+    </div>
+
+    <div id="modalSolicitar" class="modal-just">
+        <div class="modal-just-content">
+            <div class="header-modal">
+                <h3><i class='bx bx-file-plus' style="color: var(--border-focus);"></i> Solicitar Justificación</h3>
+                <button class="cerrar-modal" onclick="cerrarModalSolicitar()">&times;</button>
+            </div>
+            <form id="formSolicitudJustificacion">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label for="fecha_inicio"><i class='bx bx-calendar'></i> Fecha Inicio</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin"><i class='bx bx-calendar'></i> Fecha Fin</label>
+                        <input type="date" id="fecha_fin" name="fecha_fin" required>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="tipo"><i class='bx bx-tag'></i> Tipo de Justificación</label>
+                    <select id="tipo" name="tipo" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="medica">Médica</option>
+                        <option value="personal">Personal</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="deportiva">Deportiva</option>
+                        <option value="academica">Académica</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="materia_justificacion"><i class='bx bx-book'></i> ¿A qué materia faltó? (Opcional)</label>
+                    <select id="materia_justificacion" name="materia_justificacion">
+                        <option value="">Todo el día (Falta general)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="descripcion"><i class='bx bx-comment-detail'></i> Descripción de los hechos</label>
+                    <textarea id="descripcion" name="descripcion" placeholder="Explique brevemente el motivo..." required></textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="archivo"><i class='bx bx-paperclip'></i> Constancia (opcional: PDF, JPG o PNG, máx. 5 MB)</label>
+                    <input type="file" id="archivo" name="archivo" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalSolicitar()">Cancelar</button>
+                    <button type="submit" class="btn btn-success"><i class='bx bx-check'></i> Enviar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/justificaciones_estudiante.js"></script>
+</body>
+</html>

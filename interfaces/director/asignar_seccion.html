@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Sección - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .asignacion-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .asignacion-form {
+            position: sticky;
+            top: 100px;
+        }
+
+        .estudiante-lista {
+            max-height: 580px;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .estudiante-lista h2 {
+                position: sticky;
+                top: 0;
+                background: var(--bg-card);
+                z-index: 10;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+        #contenedor-estudiantes {
+            max-height: 460px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .asignacion-container {
+                grid-template-columns: 1fr;
+            }
+
+            .asignacion-form {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html" class="active"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Asignar Estudiante a Sección</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Gestiona la asignación de estudiantes a sus cursos y secciones</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="asignacion-container">
+                <div class="card asignacion-form">
+                    <h2><i class='bx bx-user-plus' style="color: #007AFF;"></i> Asignar Estudiante</h2>
+                    <form id="formAsignarEstudiante">
+                        <div class="form-group" style="margin-bottom:15px;">
+                            <label for="estudiante_id"><i class='bx bxs-graduation'></i> Estudiante</label>
+                            <select id="estudiante_id" name="estudiante_id" required>
+                                <option value="">Seleccione un estudiante...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:15px;">
+                            <label for="curso_id"><i class='bx bx-layer'></i> Sección</label>
+                            <select id="curso_id" name="curso_id" required>
+                                <option value="">Seleccione una sección...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:20px;">
+                            <label for="anio_academico"><i class='bx bx-calendar'></i> Año Académico</label>
+                            <select id="anio_academico" name="anio_academico">
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success" style="width:100%; padding:12px;">
+                            <i class='bx bx-check'></i> Asignar Estudiante
+                        </button>
+                    </form>
+                </div>
+
+                <div class="card estudiante-lista">
+                    <h2><i class='bx bx-group' style="color: #34C759;"></i> Lista de Estudiantes</h2>
+                    <div id="contenedor-estudiantes">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/asignar_seccion.js"></script>
+</body>
+</html>

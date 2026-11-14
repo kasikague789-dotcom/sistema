@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Sistema de Asistencia</title>
+    <link rel="icon" type="image/png" href="css/elena.png">
+    <link rel="stylesheet" href="css/styles2.css">
+    <style>
+        .modal-verificacion {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-verificacion.active { display: flex; }
+        
+        .modal-verificacion-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .btn-cerrar-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #a0aec0;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .btn-cerrar-modal:hover { color: #e53e3e; }
+
+        .modal-verificacion-content .icono-correo {
+            width: 70px;
+            height: 70px;
+            background: #ebf8ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .modal-verificacion-content h3 {
+            color: #1a202c;
+            margin: 0 0 10px;
+            font-size: 22px;
+        }
+        .modal-verificacion-content p {
+            color: #4a5568;
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .inputs-codigo {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .inputs-codigo input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            color: #1a202c;
+            transition: border-color 0.2s;
+        }
+        .inputs-codigo input:focus {
+            outline: none;
+            border-color: #3182ce;
+            background: #f7fafc;
+        }
+        .modal-verificacion-content .btn-verificar {
+            width: 100%;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+        .modal-verificacion-content .btn-verificar:hover {
+            background: #2b4c9e;
+        }
+        .modal-verificacion-content .btn-verificar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .modal-verificacion-content .btn-cancelar-verif {
+            width: 100%;
+            background: transparent;
+            color: #e53e3e;
+            border: 1px solid #fed7d7;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+        .modal-verificacion-content .btn-cancelar-verif:hover { background: #fff5f5; }
+
+        .modal-verificacion-content .reenviar {
+            font-size: 13px;
+            color: #718096;
+        }
+        .modal-verificacion-content .reenviar a {
+            color: #3182ce;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* --- ESTILO PARA EL MENSAJE DISCRETO (TOAST) --- */
+        .toast-mensaje {
+            display: none;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            transform: translateY(-10px);
+        }
+        .toast-mensaje.mostrar {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast-mensaje.error {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .toast-mensaje.success {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        .toast-mensaje.info {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PANEL IZQUIERDO (Idéntico al Login) -->
+        <div class="panel-left">
+            <div class="overlay"></div>
+            <div class="left-content">
+                <img src="css/sello_elena.png" alt="Escudo de la U.E. Instituto Elena de Bueno" class="panel-logo">
+                <span class="tag">Eucaristía · Hogar · Cultura</span>
+                <h1>Control de Asistencia</h1>
+                <p>La asistencia de cada clase, los horarios, las justificaciones y los reportes de la U.E. Instituto Elena de Bueno en un solo lugar.</p>
+                <ul class="lista-panel">
+                    <li><strong>Profesores</strong><span>Pasan lista en cada clase y revisan los reportes de sus secciones.</span></li>
+                    <li><strong>Estudiantes</strong><span>Consultan su asistencia y su horario, y justifican faltas con constancia.</span></li>
+                    <li><strong>Dirección</strong><span>Organiza secciones y horarios, responde justificaciones y recibe avisos.</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PANEL DERECHO (Tu formulario de registro intacto) -->
+        <div class="panel-right">
+            <div class="form-container">
+                
+                <!-- LOGO Y TEXTO ESTILO LOGIN (Clase .marca) -->
+                <div class="marca">
+                    <img src="css/escudo_elena.png" alt="Escudo U.E. Instituto Elena de Bueno">
+                    <div>
+                        <strong>U.E. Instituto Elena de Bueno</strong>
+                        <span>Sistema de Asistencia</span>
+                    </div>
+                </div>
+
+                <div class="form-header">
+                    <h2>Crear Cuenta</h2>
+                    <p>¿Ya tiene una cuenta? <a href="login.html">Inicie sesión aquí</a></p>
+                </div>
+
+                <!-- AQUÍ APARECERÁ EL MENSAJE DISCRETO -->
+                <div id="toastMensaje" class="toast-mensaje"></div>
+
+                <form id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">Nombre(s)</label>
+                            <input type="text" id="firstName" required placeholder="Ej. Juan">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Apellido(s)</label>
+                            <input type="text" id="lastName" required placeholder="Ej. Pérez">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico Institucional</label>
+                        <input type="email" id="email" required placeholder="juan.perez@institucion.edu">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idNumber">Cédula / Documento de Identidad</label>
+                        <input type="text" id="idNumber" required placeholder="Ingrese su identificación">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password" required placeholder=".......">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirmar Contraseña</label>
+                            <input type="password" id="confirmPassword" required placeholder=".......">
+                        </div>
+                    </div>
+
+                    <div class="terms">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">Acepto los <a href="#">Términos, Condiciones y Políticas de Privacidad</a> de la institución.</label>
+                    </div>
+
+                    <button type="submit" class="btn-submit" style="margin-top: 15px;">Registrar Usuario</button>
+                </form>
+
+                <div class="footer-text">
+                    <p>&copy; 2026 Sistema de Asistencia - Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VERIFICACIÓN -->
+    <div id="modalVerificacion" class="modal-verificacion">
+        <div class="modal-verificacion-content">
+            <button class="btn-cerrar-modal" onclick="cerrarModalVerificacion()" title="Cerrar">&times;</button>
+            
+            <div class="icono-correo">
+                <svg viewBox="0 0 24 24" width="34" height="34" stroke="#3182ce" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            <h3>Verifica tu correo</h3>
+            <p id="textoCorreo">Enviamos un código de 6 dígitos a tu correo. Ingrésalo aquí abajo.</p>
+            
+            <div class="inputs-codigo">
+                <input type="text" maxlength="1" id="c1" inputmode="numeric">
+                <input type="text" maxlength="1" id="c2" inputmode="numeric">
+                <input type="text" maxlength="1" id="c3" inputmode="numeric">
+                <input type="text" maxlength="1" id="c4" inputmode="numeric">
+                <input type="text" maxlength="1" id="c5" inputmode="numeric">
+                <input type="text" maxlength="1" id="c6" inputmode="numeric">
+            </div>
+
+            <button class="btn-verificar" id="btnVerificar" onclick="verificarCodigo()">Verificar y Activar</button>
+            <button class="btn-cancelar-verif" onclick="cerrarModalVerificacion()">Cancelar y volver</button>
+
+            <div class="reenviar">
+                ¿No recibiste el código? <a onclick="reenviarCodigo()">Reenviar código</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script2.js"></script>
+</body>
+</html>

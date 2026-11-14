@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Sistema de Asistencia</title>
+    <link rel="icon" type="image/png" href="css/elena.png">
+    <link rel="stylesheet" href="css/styles2.css">
+
+    <!-- Corrección del campo contraseña: el botón "Ver/Ocultar" ya no se sale de la línea -->
+    <style>
+        /* Que el ancho incluya bordes y padding (evita desbordes) */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .campo-clave {
+            position: relative;
+            width: 100%;
+        }
+
+        .campo-clave input {
+            width: 100%;
+            /* Espacio reservado a la derecha para "Ver" / "Ocultar" */
+            padding-right: 5.5rem;
+        }
+
+        .campo-clave .btn-ojo {
+            position: absolute;
+            top: 50%;
+            right: 0.5rem;
+            transform: translateY(-50%);
+
+            /* Ancho mínimo fijo para que no "salte" al cambiar a "Ocultar" */
+            min-width: 4.5rem;
+            padding: 0.25rem 0.5rem;
+            height: auto;
+            line-height: 1.2;
+
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            color: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        [hidden] { display: none !important; }
+        @media (max-width: 768px) {
+            .btn-ojo { min-width: 44px; height: 38px !important; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; }
+            .link-boton { min-height: 40px; padding: 8px 0; }
+        }
+        .recuperar-titulo { margin: 0 0 6px; font-size: 1.15rem; }
+        .recuperar-ayuda { margin: 0 0 16px; font-size: 0.9rem; color: #4a5568; line-height: 1.45; }
+        .recuperar-pie { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="panel-left">
+            <div class="overlay"></div>
+            <div class="left-content">
+                <img src="css/sello_elena.png" alt="Escudo de la U.E. Instituto Elena de Bueno" class="panel-logo">
+                <span class="tag">Eucaristía · Hogar · Cultura</span>
+                <h1>Control de Asistencia</h1>
+                <p>La asistencia de cada clase, los horarios, las justificaciones y los reportes de la U.E. Instituto Elena de Bueno en un solo lugar.</p>
+                <ul class="lista-panel">
+                    <li><strong>Profesores</strong><span>Pasan lista en cada clase y revisan los reportes de sus secciones.</span></li>
+                    <li><strong>Estudiantes</strong><span>Consultan su asistencia y su horario, y justifican faltas con constancia.</span></li>
+                    <li><strong>Dirección</strong><span>Organiza secciones y horarios, responde justificaciones y recibe avisos.</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <div class="form-container">
+                <div class="marca">
+                    <img src="css/escudo_elena.png" alt="">
+                    <div>
+                        <strong>U.E. Instituto Elena de Bueno</strong>
+                        <span>Sistema de Asistencia</span>
+                    </div>
+                </div>
+
+                <div class="form-header">
+                    <h2>Ingresar al Sistema</h2>
+                    <p>¿Aún no tiene cuenta? <a href="index2.html">Regístrese aquí</a></p>
+                </div>
+
+                <div id="mensaje-login" class="mensaje" role="alert" aria-live="polite"></div>
+
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="loginEmail">Correo o cédula</label>
+                        <input type="text" id="loginEmail" name="usuario" required autocomplete="username" autofocus>
+                        <small class="ayuda">Ej.: su correo, o su cédula solo con números</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <div class="campo-clave">
+                            <input type="password" id="loginPassword" name="password" required autocomplete="current-password">
+                            <button type="button" id="togglePassword" class="btn-ojo" aria-label="Mostrar contraseña" aria-pressed="false">Ver</button>
+                        </div>
+                    </div>
+
+                    <div class="fila-opciones">
+                        <label for="rememberMe">
+                            <input type="checkbox" id="rememberMe">
+                            Mantener sesión iniciada
+                        </label>
+                        <button type="button" id="btnOlvido" class="link-boton" aria-controls="mensaje-login">¿Olvidó su contraseña?</button>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Iniciar sesión</button>
+                </form>
+
+                <!-- ¿Olvidó su contraseña? El director recibe un código en su correo -->
+                <form id="recuperarForm" novalidate hidden>
+                    <h3 class="recuperar-titulo">Recuperar contraseña</h3>
+                    <p class="recuperar-ayuda">Si es la cuenta del director, le enviamos un código a su correo para poner una contraseña nueva.
+                        Profesores y estudiantes: pidan una clave temporal a la dirección.</p>
+                    <div class="form-group">
+                        <label for="recUsuario">Correo o cédula</label>
+                        <input type="text" id="recUsuario" autocomplete="username" required>
+                    </div>
+                    <div id="pasoCodigo" hidden>
+                        <div class="form-group">
+                            <label for="recCodigo">Código del correo (6 números)</label>
+                            <input type="text" id="recCodigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="recNueva">Contraseña nueva (mínimo 6)</label>
+                            <input type="password" id="recNueva" autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="recRepetir">Repita la contraseña nueva</label>
+                            <input type="password" id="recRepetir" autocomplete="new-password">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="btnRecuperar">Enviar código</button>
+                    <div class="recuperar-pie">
+                        <button type="button" class="link-boton" id="btnVolverLogin">Volver a iniciar sesión</button>
+                        <button type="button" class="link-boton" id="btnReenviar" hidden>Enviar otro código</button>
+                    </div>
+                </form>
+
+                <div class="footer-text">
+                    <p>&copy; 2026 U.E. Instituto Elena de Bueno - Sistema de Asistencia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script_login.js"></script>
+</body>
+</html>

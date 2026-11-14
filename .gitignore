@@ -1,0 +1,6 @@
+.env
+node_modules/
+respaldos_bd/
+uploads/
+.session_secret
+certificado_local/

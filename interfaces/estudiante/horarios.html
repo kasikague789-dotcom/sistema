@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Horario - Estudiante</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Mi Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="horarios.html" class="active"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px;">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin:0; font-size:24px; font-weight:700; color:var(--text-primary);">Mi Horario</h1>
+                        <p style="color:var(--text-secondary); margin:4px 0 0 0; font-size:14px;">Visualiza tu horario de clases</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="horario-wrapper">
+                
+                <div class="horario-header">
+                    <h2><i class='bx bx-calendar' style="color: var(--border-focus);"></i> Mi Horario Semanal</h2>
+                    <div class="curso-badge" id="info-curso-texto">
+                        Cargando sección...
+                    </div>
+                </div>
+
+                
+                <div class="stats-grid-estudiante stats-horario">
+                    <div class="stat-card-estudiante" style="border-bottom-color: #007AFF;">
+                        <div class="icon"><i class='bx bx-book-open' style="color: #007AFF;"></i></div>
+                        <div class="numero" id="stat-total-clases">0</div>
+                        <div class="etiqueta">Clases Totales</div>
+                    </div>
+                    <div class="stat-card-estudiante" style="border-bottom-color: #5856D6;">
+                        <div class="icon"><i class='bx bx-calendar' style="color: #5856D6;"></i></div>
+                        <div class="numero" id="stat-dias-semana">0</div>
+                        <div class="etiqueta">Días a la Semana</div>
+                    </div>
+                    <div class="stat-card-estudiante" style="border-bottom-color: #34C759;">
+                        <div class="icon"><i class='bx bx-chalkboard' style="color: #34C759;"></i></div>
+                        <div class="numero" id="stat-profesores">0</div>
+                        <div class="etiqueta">Profesores</div>
+                    </div>
+                </div>
+
+                
+                <div class="tabla-wrapper" style="box-shadow: none; border-radius: 0; margin-bottom: 0;">
+                    <table class="table tabla-horario" id="tablaHorario">
+                        <thead>
+                            <tr id="encabezadoDias">
+                                <th style="min-width:120px;">Bloque / Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoHorario">
+                            
+                        </tbody>
+                    </table>
+                </div>
+
+                
+                <div class="leyenda-horario">
+                    <span class="item"><span class="color"></span> Clase asignada</span>
+                    <span class="item" style="margin-left:15px;">
+                        <i class='bx bx-info-circle'></i> Las clases se muestran según tu curso
+                    </span>
+                    <span class="hoy-label">
+                        Hoy es <span id="nombre-dia-hoy">--</span>
+                    </span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    
+    <script src="../../js/script.js"></script>
+    <script src="../../js/horarios_estudiante.js"></script>
+</body>
+</html>

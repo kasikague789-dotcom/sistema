@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html" class="active"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Configuración del Sistema</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Administra los parámetros generales del sistema</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="card" style="margin-bottom:25px;">
+                <h2>Configuración General</h2>
+                <form id="formConfiguracion">
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label for="hora_entrada">Hora límite de entrada</label>
+                            <input type="time" id="hora_entrada" name="hora_entrada">
+                            <div class="descripcion">Para clases sin horario ese día: quien llegue después se marca Tarde. Si la clase tiene horario, cuenta su hora de inicio más la tolerancia.</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="hora_cambio_turno">Cambio de turno (mañana a tarde)</label>
+                            <input type="time" id="hora_cambio_turno" name="hora_cambio_turno">
+                            <div class="descripcion">Las secciones de la mañana pasan lista antes de esta hora y las de la tarde desde esta hora. Las secciones sin turno no tienen límite. El director puede corregir a cualquier hora.</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="porcentaje_asistencia_minimo">Porcentaje mínimo de asistencia</label>
+                            <input type="number" id="porcentaje_asistencia_minimo" name="porcentaje_asistencia_minimo" min="0" max="100">
+                            <div class="descripcion">Por debajo de este % se marca en rojo (panel, reportes y estudiante)</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="dias_maximos_justificar">Plazo para justificar (días)</label>
+                            <input type="number" id="dias_maximos_justificar" name="dias_maximos_justificar" min="1">
+                            <div class="descripcion">Plazo en días para enviar una justificación después de la falta</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="minutos_tolerancia">Tolerancia al escanear el carnet (minutos)</label>
+                            <input type="number" id="minutos_tolerancia" name="minutos_tolerancia" min="0" max="120">
+                            <div class="descripcion">Al escanear el QR: quien llega después del inicio de la clase más estos minutos queda Tarde</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="notificaciones_activas">Notificaciones activas</label>
+                            <select id="notificaciones_activas" name="notificaciones_activas">
+                                <option value="true">Activadas</option>
+                                <option value="false">Desactivadas</option>
+                            </select>
+                            <div class="descripcion">Avisos en la campana de notificaciones: faltas, justificaciones y cambios de asistencia</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="permitir_edicion_asistencia">Edición de asistencia</label>
+                            <select id="permitir_edicion_asistencia" name="permitir_edicion_asistencia">
+                                <option value="true">Permitida</option>
+                                <option value="false">Restringida</option>
+                            </select>
+                            <div class="descripcion">Permitir a profesores pasar o corregir lista de días pasados</div>
+                        </div>
+                        <div class="config-item">
+                            <label for="filtro_groserias_activo">Filtro de groserías</label>
+                            <select id="filtro_groserias_activo" name="filtro_groserias_activo">
+                                <option value="true">Activado</option>
+                                <option value="false">Desactivado</option>
+                            </select>
+                            <div class="descripcion">Bloquea groserías en todo el sistema: nombres, correos, contraseñas, fechas, descripciones, observaciones, calendario y horarios</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <button type="submit" class="btn btn-success"><i class='bx bx-save'></i> Guardar Configuración</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card" style="margin-bottom:25px;" id="card-clave-seguridad">
+                <h2>Clave de seguridad del director</h2>
+                <p class="descripcion" style="margin:0 0 14px; max-width:75ch;">Es una clave aparte de su contraseña. Solo usted la sabe. El sistema la pide para acciones delicadas, como pasar todas las secciones al año siguiente.</p>
+                <p id="estado-clave-seguridad" style="margin:0 0 14px; font-weight:600;"></p>
+                <form id="formClaveSeguridad" autocomplete="off">
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label for="cs_password">Su contraseña de entrada</label>
+                            <input type="password" id="cs_password" autocomplete="current-password" required>
+                        </div>
+                        <div class="config-item" id="grupo-cs-actual" style="display:none;">
+                            <label for="cs_actual">Clave de seguridad actual</label>
+                            <input type="password" id="cs_actual" autocomplete="off">
+                        </div>
+                        <div class="config-item">
+                            <label for="cs_nueva">Nueva clave de seguridad (mínimo 8)</label>
+                            <input type="password" id="cs_nueva" minlength="8" autocomplete="new-password" required>
+                        </div>
+                        <div class="config-item">
+                            <label for="cs_repetir">Repita la nueva clave</label>
+                            <input type="password" id="cs_repetir" minlength="8" autocomplete="new-password" required>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+                        <button type="submit" class="btn btn-primary"><i class='bx bx-lock-alt'></i> Guardar clave de seguridad</button>
+                        <button type="button" class="btn btn-secondary" id="btn-olvido-clave" style="display:none;"><i class='bx bx-envelope'></i> ¿Olvidó la clave de seguridad?</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card" style="margin-bottom:25px;">
+                <h2>Filtro de Groserías</h2>
+                <div class="info-box">
+                    <strong>¿Cómo funciona?</strong><br>
+                    Cuando un usuario intenta crear o editar un perfil con <strong>palabras ofensivas en el nombre o apellido</strong>,
+                    el sistema <strong>bloqueará</strong> el guardado y mostrará un mensaje de error con sugerencias de texto filtrado.
+                </div>
+                <p style="color:var(--text-secondary); margin-bottom:15px; font-size:14px;">Gestiona las palabras que se bloquean en todo el sistema (nombres, correos, contraseñas, fechas, descripciones, observaciones, calendario y horarios).</p>
+
+                <form id="formGroseria" class="groseria-form">
+                    <div class="form-group">
+                        <label for="palabra">Palabra ofensiva</label>
+                        <input type="text" id="palabra" required placeholder="Ej: groseria">
+                    </div>
+                    <div class="form-group">
+                        <label for="nivel">Nivel</label>
+                        <select id="nivel">
+                            <option value="leve">Leve</option>
+                            <option value="moderado">Moderado</option>
+                            <option value="grave">Grave</option>
+                            <option value="muy_grave">Muy Grave</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reemplazo">Reemplazo</label>
+                        <input type="text" id="reemplazo" placeholder="***" value="***">
+                    </div>
+                    <div class="form-group" style="flex:0 0 auto;">
+                        <button type="submit" class="btn btn-primary"><i class='bx bx-plus'></i> Agregar</button>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="border-bottom:2px solid var(--border-color); text-align:left;">
+                                <th style="padding:10px;">Palabra</th>
+                                <th style="padding:10px;">Nivel</th>
+                                <th style="padding:10px;">Reemplazo</th>
+                                <th style="padding:10px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-groserias"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Información del Sistema</h2>
+                <div class="info-sistema-grid">
+                    <div class="info-sistema-item"><strong>Modo de Ejecución:</strong> Servidor Node.js + MySQL</div>
+                    <div class="info-sistema-item"><strong>Base de Datos:</strong> Conectada (Activa)</div>
+                    <div class="info-sistema-item"><strong>Navegador:</strong> HTML5 / ES6 JavaScript</div>
+                    <div class="info-sistema-item"><strong>Fecha y Hora Cliente:</strong> <span id="info-fecha-servidor">--/--/---- --:--:--</span></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/configuracion.js"></script>
+</body>
+</html>

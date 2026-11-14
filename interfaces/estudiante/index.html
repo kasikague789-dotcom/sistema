@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Estudiante - Sistema de Asistencia</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html" class="active"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Mi Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px;">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin:0; font-size:24px; font-weight:700; color:var(--text-primary);">Mi Menú</h1>
+                        <p style="color:var(--text-secondary); margin:4px 0 0 0; font-size:14px;" id="subtitulo-header">Cargando...</p>
+                    </div>
+                </div>
+                <div class="user-badge" id="badge-usuario" style="font-weight:600; background:var(--bg-card); padding:8px 16px; border-radius:20px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); color:var(--text-primary); display:flex; align-items:center; gap:8px;">
+                    <i class='bx bx-user-circle' style="font-size: 18px; color: var(--border-focus);"></i> Cargando...
+                </div>
+            </header>
+
+            <div class="info-estudiante">
+                <div class="datos">
+                    <h2 id="saludo-estudiante">Hola, Estudiante</h2>
+                    <p id="detalles-estudiante">Cargando datos...</p>
+                </div>
+                <div class="curso-badge" id="badge-curso">
+                    Cargando sección...
+                </div>
+            </div>
+
+            <div class="asistencia-hoy">
+                <div>
+                    <strong style="color:var(--text-primary); font-size:15px;">Asistencia de Hoy</strong>
+                    <span id="estado-asistencia-hoy" class="estado">Cargando...</span>
+                </div>
+                <div>
+                    <span id="alerta-justificaciones" style="color:#FF9500; font-weight:600; font-size:13px;"></span>
+                </div>
+            </div>
+
+            <div class="stats-grid-estudiante">
+                <div class="stat-card-estudiante porcentaje">
+                    <div class="icon"><i class='bx bx-pie-chart-alt-2' style="color: #5856D6;"></i></div>
+                    <div class="numero" id="stat-porcentaje">0%</div>
+                    <div class="etiqueta">Asistencia (30 días)</div>
+                </div>
+                <div class="stat-card-estudiante presente">
+                    <div class="icon"><i class='bx bx-check-circle' style="color: #34C759;"></i></div>
+                    <div class="numero" id="stat-presentes">0</div>
+                    <div class="etiqueta">Presentes</div>
+                </div>
+                <div class="stat-card-estudiante ausente">
+                    <div class="icon"><i class='bx bx-x-circle' style="color: #FF3B30;"></i></div>
+                    <div class="numero" id="stat-ausentes">0</div>
+                    <div class="etiqueta">Ausentes</div>
+                </div>
+                <div class="stat-card-estudiante tarde">
+                    <div class="icon"><i class='bx bx-time' style="color: #FF9500;"></i></div>
+                    <div class="numero" id="stat-tardes">0</div>
+                    <div class="etiqueta">Tardes</div>
+                </div>
+                <div class="stat-card-estudiante justificado">
+                    <div class="icon"><i class='bx bx-file-blank' style="color: #007AFF;"></i></div>
+                    <div class="numero" id="stat-justificados">0</div>
+                    <div class="etiqueta">Justificados</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:25px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                    <span style="font-weight:600; color:var(--text-primary); font-size:16px;">Progreso de Asistencia</span>
+                    <span id="texto-porcentaje-progreso" style="font-size:18px; font-weight:700; color:#34C759;">0%</span>
+                </div>
+                <div class="barra-progreso">
+                    <div id="barra-fill" class="fill" style="width:0%;"></div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:25px;">
+                <h3 style="color:var(--text-primary); font-size:16px; font-weight:600; margin-bottom:16px;">Próximos Eventos</h3>
+                <div id="contenedor-proximos-eventos">
+                    <p style="color:var(--text-muted); font-size:13px; text-align:center;">Cargando eventos...</p>
+                </div>
+            </div>
+
+            <div class="quick-actions" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px;">
+                <a href="justificaciones.html" class="btn btn-success" style="flex:1; min-width:180px; justify-content:center;"><i class='bx bx-file'></i> Solicitar Justificación</a>
+                <a href="asistencia.html" class="btn btn-primary" style="flex:1; min-width:180px; justify-content:center;"><i class='bx bx-check-shield'></i> Ver Asistencia</a>
+                <a href="horarios.html" class="btn btn-warning" style="flex:1; min-width:180px; justify-content:center;"><i class='bx bx-time-five'></i> Mi Horario</a>
+            </div>
+        </main>
+    </div>
+
+    
+    <script src="../../js/script.js"></script>
+    <script src="../../js/estudiante_dashboard.js"></script>
+</body>
+</html>

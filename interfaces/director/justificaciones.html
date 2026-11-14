@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Justificaciones - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html" class="active"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Gestión de Justificaciones</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Revisa y procesa las justificaciones de inasistencia</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+
+            <div class="stats-justificaciones">
+                <div class="stat-just total">
+                    <div class="icono"><i class='bx bx-clipboard'></i></div>
+                    <div class="numero" id="stat-total">0</div>
+                    <div class="etiqueta">Total</div>
+                </div>
+                <div class="stat-just pendiente">
+                    <div class="icono"><i class='bx bx-time-five'></i></div>
+                    <div class="numero" id="stat-pendientes">0</div>
+                    <div class="etiqueta">Pendientes</div>
+                </div>
+                <div class="stat-just aprobada">
+                    <div class="icono"><i class='bx bx-check-circle'></i></div>
+                    <div class="numero" id="stat-aprobadas">0</div>
+                    <div class="etiqueta">Aprobadas</div>
+                </div>
+                <div class="stat-just rechazada">
+                    <div class="icono"><i class='bx bx-x-circle'></i></div>
+                    <div class="numero" id="stat-rechazadas">0</div>
+                    <div class="etiqueta">Rechazadas</div>
+                </div>
+                <div class="stat-just revision">
+                    <div class="icono"><i class='bx bx-search-alt'></i></div>
+                    <div class="numero" id="stat-revision">0</div>
+                    <div class="etiqueta">En Revisión</div>
+                </div>
+            </div>
+
+            <div class="filtros-container">
+                <form id="formFiltros" style="display:flex; flex-wrap:wrap; gap:15px; width:100%; align-items:flex-end;">
+                    <div class="grupo">
+                        <label for="estado"><i class='bx bx-filter'></i> Estado</label>
+                        <select id="estado">
+                            <option value="todos">Todos</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="aprobada">Aprobadas</option>
+                            <option value="rechazada">Rechazadas</option>
+                            <option value="revision">En Revisión</option>
+                        </select>
+                    </div>
+                    <div class="grupo">
+                        <label for="tipo"><i class='bx bx-tag'></i> Tipo</label>
+                        <select id="tipo">
+                            <option value="todos">Todos</option>
+                            <option value="medica">Médica</option>
+                            <option value="personal">Personal</option>
+                            <option value="familiar">Familiar</option>
+                            <option value="deportiva">Deportiva</option>
+                            <option value="academica">Académica</option>
+                            <option value="otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="grupo" style="flex:2;">
+                        <label for="busqueda"><i class='bx bx-search'></i> Buscar</label>
+                        <input type="text" id="busqueda" placeholder="Nombre, cédula o sección...">
+                    </div>
+                </form>
+            </div>
+
+            <div id="contenedor-justificaciones">
+                <div style="text-align:center; padding:40px; color:var(--text-muted);">Cargando justificaciones...</div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modalJustificacion" class="modal-just">
+        <div class="modal-just-content">
+            <div class="header-modal">
+                <h3 id="modalTitle">Procesar Justificación</h3>
+                <button class="cerrar-modal" type="button" onclick="cerrarModal()">&times;</button>
+            </div>
+            <form onsubmit="procesarJustificacion(event)">
+                <input type="hidden" id="justificacion_id">
+                <input type="hidden" id="estado_modal">
+
+                <div class="form-group">
+                    <label for="observaciones"><i class='bx bx-message-square-detail'></i> Observaciones (opcional)</label>
+                    <textarea id="observaciones" placeholder="Agrega observaciones para el estudiante..."></textarea>
+                </div>
+
+                <div class="checkbox-group" id="grupo_inasistencia" style="display:flex; align-items:center; gap:8px; margin:15px 0;">
+                    <input type="checkbox" id="eliminar_inasistencia" checked style="width:auto;">
+                    <label for="eliminar_inasistencia" style="margin:0; font-size:13px; cursor:pointer;">Cambiar estado a 'Justificada' en el registro de asistencia</label>
+                </div>
+
+                <div class="modal-buttons" style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="submit" class="btn btn-success" style="flex:1;"><i class='bx bx-check'></i> Confirmar</button>
+                    <button type="button" onclick="cerrarModal()" class="btn btn-secondary" style="flex:1;"><i class='bx bx-x'></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/justificaciones_director.js"></script>
+</body>
+</html>

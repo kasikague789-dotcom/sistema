@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Horarios - Director</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .horario-wrapper {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .form-horario {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 100px;
+        }
+
+            .form-horario h3 {
+                color: var(--text-primary);
+                margin-bottom: 20px;
+                font-size: 18px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .form-horario .form-group {
+                margin-bottom: 18px;
+            }
+
+                .form-horario .form-group label {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                    font-size: 13px;
+                    color: var(--text-primary);
+                }
+
+                .form-horario .form-group select,
+                .form-horario .form-group input {
+                    width: 100%;
+                    padding: 12px 14px;
+                    border: 1px solid var(--border-color);
+                    border-radius: 10px;
+                    font-size: 14px;
+                    background: var(--bg-input);
+                    color: var(--text-primary);
+                    font-family: inherit;
+                    transition: all 0.3s ease;
+                }
+
+                    .form-horario .form-group select:focus,
+                    .form-horario .form-group input:focus {
+                        border-color: var(--border-focus);
+                        outline: none;
+                        background: var(--bg-card);
+                        box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+                    }
+
+        .filtros-horario {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            background: var(--bg-card);
+            padding: 20px 25px;
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+            .filtros-horario .grupo {
+                flex: 1;
+                min-width: 180px;
+            }
+
+                .filtros-horario .grupo label {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    margin-bottom: 8px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .filtros-horario .grupo select {
+                    width: 100%;
+                    padding: 12px 14px;
+                    border: 1px solid var(--border-color);
+                    border-radius: 10px;
+                    font-size: 14px;
+                    background: var(--bg-input);
+                    color: var(--text-primary);
+                    transition: all 0.3s ease;
+                }
+
+        .horario-tabla {
+            background: var(--bg-card);
+            border-radius: var(--radio-card);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+            .horario-tabla .header-tabla {
+                background: var(--bg-glass);
+                backdrop-filter: saturate(180%) blur(20px);
+                -webkit-backdrop-filter: saturate(180%) blur(20px);
+                color: var(--text-primary);
+                padding: 18px 25px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+                .horario-tabla .header-tabla h3 {
+                    margin: 0;
+                    font-size: 18px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .horario-tabla .header-tabla .info {
+                    font-size: 13px;
+                    color: var(--text-secondary);
+                    font-weight: 500;
+                }
+
+        .tabla-horario {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent;
+        }
+
+            .tabla-horario th {
+                background: var(--bg-card) !important;
+                padding: 14px 16px;
+                text-align: left;
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border-bottom: 2px solid var(--border-color);
+            }
+
+            .tabla-horario td {
+                padding: 14px 16px;
+                border-bottom: 1px solid var(--border-color);
+                color: var(--text-primary);
+                font-size: 13px;
+                vertical-align: middle;
+            }
+
+            .tabla-horario tr:hover td {
+                background: var(--bg-table-hover);
+            }
+
+        @media (max-width: 1100px) {
+            .horario-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .form-horario {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="usuarios.html"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="gestionar_secciones.html"><i class='bx bx-layer'></i> Gestionar Secciones</a></li>
+                <li><a href="asignar_seccion.html"><i class='bx bxs-graduation'></i> Asignar Estudiante</a></li>
+                <li><a href="asignar_profesor.html"><i class='bx bx-chalkboard'></i> Asignar Profesores</a></li>
+                <li><a href="horarios.html" class="active"><i class='bx bx-time-five'></i> Horarios</a></li>
+                <li><a href="asistencia.html"><i class='bx bx-check-shield'></i> Asistencia</a></li>
+                <li><a href="justificaciones.html"><i class='bx bx-file'></i> Justificaciones</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="carnets.html"><i class='bx bx-qr'></i> Carnets QR</a></li>
+                <li><a href="cierre_periodo.html"><i class='bx bx-transfer'></i> Cierre de periodo</a></li>
+                <li><a href="configuracion.html"><i class='bx bx-cog'></i> Configuración</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Gestión de Horarios</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);">Administra los horarios de clases de los profesores</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo claro/oscuro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="alert-container"></div>
+            <!-- Revisión: choques, secciones sin horario y asignaciones sin horario -->
+            <div id="revision-horarios" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:12px; background:#FFF4E5; color:#8a4b00; font-size:13px; line-height:1.5;"></div>
+
+            <div class="filtros-horario">
+                <form id="formFiltros" style="display:flex; flex-wrap:wrap; gap:15px; width:100%; align-items:flex-end;">
+                    <div class="grupo">
+                        <label for="filter_profesor_id"><i class='bx bx-chalkboard'></i> Profesor</label>
+                        <select id="filter_profesor_id">
+                            <option value="0">Todos los profesores</option>
+                        </select>
+                    </div>
+                    <div class="grupo">
+                        <label for="filter_dia"><i class='bx bx-calendar'></i> Día</label>
+                        <select id="filter_dia">
+                            <option value="todos">Todos los días</option>
+                            <option value="Lunes">Lunes</option>
+                            <option value="Martes">Martes</option>
+                            <option value="Miércoles">Miércoles</option>
+                            <option value="Jueves">Jueves</option>
+                            <option value="Viernes">Viernes</option>
+                            <option value="Sábado">Sábado</option>
+                        </select>
+                    </div>
+                    <div class="grupo" style="flex:0;" id="box-limpiar-filtro">
+                        <button type="button" class="btn btn-secondary" onclick="limpiarFiltros()" style="height:46px;">
+                            <i class='bx bx-reset'></i> Limpiar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="horario-wrapper">
+                <div class="form-horario">
+                    <h3 id="titulo-form"><i class='bx bx-plus-circle' style="color: #34C759;"></i> Agregar Horario</h3>
+                    <form id="formHorario">
+                        <input type="hidden" id="horario_id" value="">
+
+                        <div class="form-group">
+                            <label for="profesor_id"><i class='bx bx-chalkboard'></i> Profesor</label>
+                            <select id="profesor_id" required>
+                                <option value="">Seleccione un profesor...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="curso_id"><i class='bx bx-layer'></i> Sección</label>
+                            <select id="curso_id" required>
+                                <option value="">Seleccione una sección...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="materia"><i class='bx bx-book'></i> Materia</label>
+                            <input type="text" id="materia" required placeholder="Ej: Matemática">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dia_semana"><i class='bx bx-calendar'></i> Día</label>
+                            <select id="dia_semana" required>
+                                <option value="">Seleccione un día...</option>
+                                <option value="Lunes">Lunes</option>
+                                <option value="Martes">Martes</option>
+                                <option value="Miércoles">Miércoles</option>
+                                <option value="Jueves">Jueves</option>
+                                <option value="Viernes">Viernes</option>
+                                <option value="Sábado">Sábado</option>
+                            </select>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="form-group">
+                                <label for="hora_inicio"><i class='bx bx-time'></i> Hora Inicio</label>
+                                <input type="time" id="hora_inicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hora_fin"><i class='bx bx-time-five'></i> Hora Fin</label>
+                                <input type="time" id="hora_fin" required>
+                            </div>
+                        </div>
+                        <p id="aviso-horas" class="aviso-campo" role="alert" hidden></p>
+
+                        <div class="form-group">
+                            <label for="aula"><i class='bx bx-door-open'></i> Aula</label>
+                            <input type="text" id="aula" placeholder="Ej: Aula 101">
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                            <button type="submit" id="btn-submit" class="btn btn-success" style="width:100%;">
+                                <i class='bx bx-check'></i> Agregar Horario
+                            </button>
+                            <button type="button" id="btn-cancelar" onclick="cancelarEdicion()" class="btn btn-secondary" style="width:100%; display:none;">
+                                <i class='bx bx-x'></i> Cancelar Edición
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div>
+                    <div class="horario-tabla">
+                        <div class="header-tabla">
+                            <h3><i class='bx bx-list-ul' style="color: #007AFF;"></i> Horarios Registrados</h3>
+                            <span class="info" id="info-total-clases">0 clases registradas</span>
+                        </div>
+                        <div class="caja-tabla-movil" style="overflow-x:auto; max-height:500px; overflow-y:auto;">
+                            <table class="tabla-horario en-tarjetas">
+                                <thead>
+                                    <tr>
+                                        <th>Profesor</th>
+                                        <th>Sección</th>
+                                        <th>Materia</th>
+                                        <th>Día</th>
+                                        <th>Hora</th>
+                                        <th>Aula</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="resumen-profesor-container" style="display:none; margin-top:20px; background:var(--bg-card); border-radius:var(--radio-card); padding:20px 25px; box-shadow:var(--shadow-md); border: 1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <strong style="color:var(--text-primary); font-size:15px;" id="resumen-nombre-profesor"><i class='bx bx-chalkboard'></i> Profesor</strong>
+                                <span style="color:var(--text-secondary); font-size:13px; margin-left:12px;" id="resumen-clases-profesor">
+                                    <i class='bx bx-book'></i> 0 clases asignadas
+                                </span>
+                            </div>
+                            <span style="font-size:13px; color:var(--text-secondary); font-weight:500;" id="resumen-dias-profesor">
+                                <i class='bx bx-calendar'></i> 0 días a la semana
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/horarios.js"></script>
+</body>
+</html>

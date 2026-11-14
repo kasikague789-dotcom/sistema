@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="../../js/sesion.js"></script>
+    <script src="../../js/dialogo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Profesor - Sistema de Asistencia</title>
+    <link rel="icon" type="image/png" href="../../css/elena.png">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link href="../../css/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .seccion-card {
+            background: var(--bg-card, #ffffff);
+            border-radius: var(--radio-card, 12px);
+            box-shadow: var(--shadow-md, 0 4px 6px rgba(0,0,0,0.1));
+            border: 1px solid var(--border-color, #e2e8f0);
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--border-focus, #3182ce);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .seccion-card:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
+            }
+
+            .seccion-card .header-card {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 15px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .seccion-card .titulo {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--text-primary, #2d3748);
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+                .seccion-card .titulo .materia {
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--text-secondary, #718096);
+                }
+
+        .badge-horario {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .badge-horario.activo {
+                background: #d1fae5;
+                color: #065f46;
+            }
+
+            .badge-horario.inactivo {
+                background: #f3f4f6;
+                color: #4b5563;
+            }
+
+        .seccion-card .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            background: var(--bg-table-hover, #f7fafc);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color, #e2e8f0);
+        }
+
+        .seccion-card .item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .seccion-card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-secondary, #718096);
+            letter-spacing: 0.5px;
+        }
+
+        .seccion-card .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary, #2d3748);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .porcentaje.alto {
+            color: #10b981;
+        }
+
+        .porcentaje.medio {
+            color: #f59e0b;
+        }
+
+        .porcentaje.bajo {
+            color: #ef4444;
+        }
+
+        .seccion-card .acciones-card {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+            .seccion-card .acciones-card a {
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                text-decoration: none;
+                color: white;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: background 0.2s ease;
+            }
+
+        .btn-pasar-lista {
+            background: #10b981;
+        }
+
+            .btn-pasar-lista:hover {
+                background: #059669;
+            }
+
+        .btn-ver-estudiantes {
+            background: #3b82f6;
+        }
+
+            .btn-ver-estudiantes:hover {
+                background: #2563eb;
+            }
+
+        .btn-reporte {
+            background: #f59e0b;
+        }
+
+            .btn-reporte:hover {
+                background: #d97706;
+            }
+        .btn-escanear-qr { background: #007AFF; color: #fff !important; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-escanear-qr:hover { background: #0062CC; }
+        .bloque-suplencias {
+            background: var(--bg-card); border: 1px solid var(--border-color); border-left: 4px solid #AF52DE;
+            border-radius: var(--radio-card, 12px); padding: 18px 20px; margin-bottom: 30px; box-shadow: var(--shadow-sm);
+        }
+        .bloque-suplencias[hidden] { display: none; }
+        .bloque-suplencias h2 { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+        .bloque-suplencias h2 i { color: #AF52DE; }
+        .bloque-suplencias-ayuda { margin: 4px 0 12px; font-size: 13px; color: var(--text-secondary); }
+        .suplencia-item {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            padding: 12px 0; border-top: 1px solid var(--border-color);
+        }
+        .suplencia-item:first-child { border-top: 0; }
+        .suplencia-item strong { color: var(--text-primary); }
+        .suplencia-item .det { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+        .suplencia-item .cuando { font-weight: 700; color: #8944ab; }
+        body.dark-mode .suplencia-item .cuando { color: #da8fff; }
+        .suplencia-item .btn { min-width: 120px; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .suplencia-item .estado-sup { font-size: 13px; color: var(--text-secondary); }
+    </style>
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="../../css/escudo_elena.png" alt="" class="logo-escudo">
+                <span class="logo-texto"><strong>U.E. Instituto</strong><span>Elena de Bueno</span></span>
+            </div>
+            <ul class="menu">
+                <li><a href="index.html" class="active"><i class='bx bxs-dashboard'></i> Inicio</a></li>
+                <li>
+                    <div class="toggle-submenu" onclick="toggleSubmenu(this)">
+                        <span><i class='bx bx-book-open'></i> Mis Secciones</span>
+                        <span class="arrow"><i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <ul class="submenu" id="submenu-secciones"></ul>
+                </li>
+                <li>
+                    <a href="justificaciones.html">
+                        <i class='bx bx-file'></i> Justificaciones
+                        <span id="badge-justificaciones-menu" class="badge-menu" style="background:#FF3B30; color:white; padding:1px 8px; border-radius:10px; font-size:10px; margin-left:5px; display:none;">0</span>
+                    </a>
+                </li>
+                <li><a href="reportes.html"><i class='bx bx-bar-chart-alt-2'></i> Reportes</a></li>
+                <li><a href="horarios.html"><i class='bx bx-time-five'></i> Mi Horario</a></li>
+                <li><a href="calendario.html"><i class='bx bx-calendar'></i> Calendario</a></li>
+                <li><a href="perfil.html"><i class='bx bx-cog'></i> Mi Perfil</a></li>
+                <li style="margin-top: 20px;"><a href="#" onclick="cerrarSesion()" class="logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding:18px 25px; background:var(--bg-card); border-radius:var(--radio-card); box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+                <div class="header-info" style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../../css/logo_elena_192.png" alt="Logo Institucional" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Inicio</h1>
+                        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--text-secondary);" id="saludo-profesor">Cargando...</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                    <div class="header-date" id="live-clock" style="font-weight:600; color:var(--text-secondary);">--/--/---- --:--</div>
+                    <div class="toggle-dark" onclick="toggleDarkMode()" title="Cambiar modo oscuro/claro">
+                        <span class="label-icon"><i class='bx bx-moon'></i></span>
+                        <div class="switch"></div>
+                        <span class="label-icon"><i class='bx bx-sun'></i></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon"><i class='bx bx-book-content'></i></div>
+                    <div class="info">
+                        <h3 id="stat-total-secciones">0</h3>
+                        <p>Secciones</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class='bx bx-group'></i></div>
+                    <div class="info">
+                        <h3 id="stat-total-estudiantes">0</h3>
+                        <p>Estudiantes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class='bx bx-check-double'></i></div>
+                    <div class="info">
+                        <h3 id="stat-porcentaje-hoy">0%</h3>
+                        <p>Asistencia Hoy</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class='bx bx-folder-open'></i></div>
+                    <div class="info">
+                        <h3 id="stat-justificaciones-pendientes">0</h3>
+                        <p>Justificaciones Pendientes</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="fab" id="fab-pasar-lista" onclick="window.location.href='pasar_lista.html'" title="Pasar lista">
+                <i class='bx bx-edit'></i>
+                <span class="badge-fab" id="fab-badge-count">0</span>
+            </button>
+
+            <section id="bloque-suplencias" class="bloque-suplencias" hidden aria-labelledby="titulo-suplencias">
+                <h2 id="titulo-suplencias"><i class='bx bx-transfer-alt'></i> Suplencias</h2>
+                <p class="bloque-suplencias-ayuda">Clases de otro profesor que la dirección le pidió cubrir. Ese día usted pasa la lista.</p>
+                <div id="lista-suplencias"></div>
+            </section>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2 style="color:var(--text-primary); margin:0; font-size:18px; font-weight: 600; display:flex; align-items:center; gap:8px;">
+                    <i class='bx bx-book-bookmark' style="color:var(--border-focus);"></i> Mis Secciones
+                </h2>
+                <a href="secciones.html" class="btn btn-primary" style="font-size:13px; padding:6px 14px;">Ver todas</a>
+            </div>
+
+            <div id="contenedor-tarjetas-secciones"></div>
+
+            <div style="margin-top:35px;">
+                <h3 style="color:var(--text-primary); font-size:16px; margin-bottom:15px; font-weight: 600; display:flex; align-items:center; gap:8px;">
+                    <i class='bx bx-calendar-event' style="color:var(--border-focus);"></i> Próximos Eventos
+                </h3>
+                <div id="contenedor-eventos-proximos"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/profesor_dashboard.js"></script>
+</body>
+</html>
