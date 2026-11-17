@@ -36,7 +36,6 @@ function actualizarEstadisticas() {
     const directores = listaUsuarios.filter(u => u.rol === 'director').length;
     const profesores = listaUsuarios.filter(u => u.rol === 'profesor').length;
     const estudiantes = listaUsuarios.filter(u => u.rol === 'estudiante').length;
-    const representantes = listaUsuarios.filter(u => u.rol === 'representante').length;
     const activos = listaUsuarios.filter(u => u.activo == 1 || u.activo === true).length;
     const inactivos = total - activos;
 
@@ -44,7 +43,6 @@ function actualizarEstadisticas() {
     document.getElementById('stat-directores').innerText = directores;
     document.getElementById('stat-profesores').innerText = profesores;
     document.getElementById('stat-estudiantes').innerText = estudiantes;
-    document.getElementById('stat-representantes').innerText = representantes;
     document.getElementById('stat-activos').innerText = activos;
     document.getElementById('stat-inactivos').innerText = inactivos;
 }
@@ -98,11 +96,12 @@ function renderTablaUsuarios(usuarios) {
         const nombreCompleto = `${u.nombre || ''} ${u.apellido || ''}`.trim() || 'Pre-registrado';
 
         let botonesAccion = `<button onclick="editarUsuario(${u.id})" class="btn-sm btn-primary" title="Editar usuario">Editar</button>`;
+        
         if (u.rol !== 'director') {
             if (esActivo) {
-                botonesAccion += ` <button onclick="eliminarUsuario(${u.id})" class="btn-sm btn-warning" style="background:#ed8936; color:white;" title="Desactivar usuario (conservando su historial)">Desactivar</button>`;
+                botonesAccion += `<button onclick="eliminarUsuario(${u.id})" class="btn-sm btn-warning" style="background:#ed8936; color:white;" title="Desactivar usuario (conservando su historial)">Desactivar</button>`;
             }
-            botonesAccion += ` <button onclick="eliminarUsuarioDefinitivo(${u.id})" class="btn-sm btn-danger" style="background:#e53e3e; color:white;" title="Eliminar permanentemente de la base de datos"><i class='bx bx-trash'></i> Eliminar Def.</button>`;
+            botonesAccion += `<button onclick="eliminarUsuarioDefinitivo(${u.id})" class="btn-sm btn-danger" style="background:#e53e3e; color:white;" title="Eliminar permanentemente de la base de datos"><i class='bx bx-trash'></i> Eliminar Def.</button>`;
         }
 
         html += `
@@ -115,9 +114,7 @@ function renderTablaUsuarios(usuarios) {
                 <td>${seccionTexto}</td>
                 <td>${u.rol === 'estudiante' ? (u.faltas || 0) : '—'}</td>
                 <td>${estadoBadge}</td>
-                <td style="white-space:nowrap;">
-                    ${botonesAccion}
-                </td>
+                <td style="white-space:nowrap;">${botonesAccion}</td>
             </tr>
         `;
     });
@@ -136,7 +133,7 @@ function aplicarFiltros(e) {
         const coincideBusqueda = `${u.nombre || ''} ${u.apellido || ''} ${u.cedula || ''} ${u.email || ''}`.toLowerCase().includes(busqueda);
         const coincideRol = rolFiltro === 'todos' || u.rol === rolFiltro;
         const coincideSeccion = seccionFiltro === 'todos' || String(u.curso_id) === seccionFiltro;
-        
+
         let coincideEstado = true;
         if (estadoFiltro === 'activo') coincideEstado = (u.activo == 1 || u.activo === true);
         if (estadoFiltro === 'inactivo') coincideEstado = (u.activo == 0 || u.activo === false);
@@ -225,9 +222,10 @@ async function eliminarUsuario(id) {
 async function eliminarUsuarioDefinitivo(id) {
     const u = listaUsuarios.find(x => x.id === id);
     const nombre = u ? `${u.nombre || ''} ${u.apellido || ''}`.trim() || `cédula V-${u.cedula}` : 'este usuario';
+    
     const confirmado = await confirmar(
         'Esta acción borrará al usuario permanentemente de la base de datos junto con todo su historial de asistencias, justificaciones, asignaciones y horarios. Esta acción no se puede deshacer.',
-        {
+        { 
             titulo: `¿Eliminar definitivamente a ${nombre}?`,
             aceptar: 'Sí, eliminar para siempre',
             cancelar: 'Cancelar',
