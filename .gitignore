@@ -1,0 +1,6 @@
+.vs/
+.session_secret
+respaldos_bd/
+*.log
+.DS_Store
+Thumbs.db

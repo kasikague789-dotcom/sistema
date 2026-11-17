@@ -1,0 +1,1391 @@
+{
+ "motivo": "Antes de migracion_2026_11.sql",
+ "fecha": "Fri Nov 06 2026 16:36:41 GMT-0400 (hora de Venezuela)",
+ "tablas": {
+  "usuarios": [
+   {
+    "id": 1,
+    "cedula": "12345678",
+    "nombre": "Carlos",
+    "apellido": "Rodríguez",
+    "email": "carlos@escuela.edu",
+    "telefono": "0412-1234567",
+    "rol": "director",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 3,
+    "cedula": "34567890",
+    "nombre": "Luis",
+    "apellido": "Martínez",
+    "email": "luis.profesor@gmail.com",
+    "telefono": "0416-4567890",
+    "rol": "profesor",
+    "password": "$2b$10$mnYmuJ1zGgC5dV6GJXM4UeJpBEORQk52mQFNuy2tR6Ai8xGghhk4O",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 4,
+    "cedula": "23456789",
+    "nombre": "Ana",
+    "apellido": "Pérez",
+    "email": "ana@escuela.edu",
+    "telefono": "0424-3456789",
+    "rol": "profesor",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 5,
+    "cedula": "11111111",
+    "nombre": "Pedro",
+    "apellido": "Ramírez",
+    "email": "Pedro@gmail.com",
+    "telefono": "0412-1111111",
+    "rol": "estudiante",
+    "password": "$2b$10$q14AvKifPJrVCfvzvXGvauWoK7zcvCW2x6l1X5ZRuF/WIffGY6pqO",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 6,
+    "cedula": "22222222",
+    "nombre": "Laura",
+    "apellido": "Díaz",
+    "email": "laura@email.com",
+    "telefono": "0414-2222222",
+    "rol": "estudiante",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 7,
+    "cedula": "33333333",
+    "nombre": "Juan",
+    "apellido": "Torres",
+    "email": "juan@email.com",
+    "telefono": "0416-3333333",
+    "rol": "estudiante",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 8,
+    "cedula": "44444444",
+    "nombre": "Ana",
+    "apellido": "Fernández",
+    "email": "ana.f@email.com",
+    "telefono": "0424-4444444",
+    "rol": "estudiante",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 9,
+    "cedula": "55555555",
+    "nombre": "Diego",
+    "apellido": "García",
+    "email": "diego@email.com",
+    "telefono": "0412-5555555",
+    "rol": "estudiante",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 15,
+    "cedula": "31221123",
+    "nombre": "antonio",
+    "apellido": "sequeda",
+    "email": "e22de@gmail.com",
+    "telefono": "212312332",
+    "rol": "estudiante",
+    "password": "$2a$10$wT0.4.3wB3yG9hX7m7O7Oe5V4Z3y2x1w0v9u8t7s6r5q4p3o2n1m",
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-08-04T01:10:38.000Z"
+   },
+   {
+    "id": 17,
+    "cedula": "32538371",
+    "nombre": "",
+    "apellido": "",
+    "email": null,
+    "telefono": null,
+    "rol": "estudiante",
+    "password": null,
+    "activo": 1,
+    "theme_preference": "light",
+    "fecha_registro": "2026-11-01T22:45:19.000Z"
+   }
+  ],
+  "cursos": [
+   {
+    "id": 1,
+    "nombre": "1er Grado",
+    "nivel": "Primaria",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 2,
+    "nombre": "1er Grado",
+    "nivel": "Primaria",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 3,
+    "nombre": "2do Grado",
+    "nivel": "Primaria",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 4,
+    "nombre": "2do Grado",
+    "nivel": "Primaria",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 5,
+    "nombre": "3er Grado",
+    "nivel": "Primaria",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 6,
+    "nombre": "3er Grado",
+    "nivel": "Primaria",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 7,
+    "nombre": "4to Grado",
+    "nivel": "Primaria",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 8,
+    "nombre": "4to Grado",
+    "nivel": "Primaria",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 9,
+    "nombre": "5to Grado",
+    "nivel": "Primaria",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 10,
+    "nombre": "5to Grado",
+    "nivel": "Primaria",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 11,
+    "nombre": "6to Grado",
+    "nivel": "Primaria",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 12,
+    "nombre": "6to Grado",
+    "nivel": "Primaria",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 13,
+    "nombre": "1er Año",
+    "nivel": "Media",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 14,
+    "nombre": "1er Año",
+    "nivel": "Media",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 15,
+    "nombre": "2do Año",
+    "nivel": "Media",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 16,
+    "nombre": "2do Año",
+    "nivel": "Media",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 17,
+    "nombre": "3er Año",
+    "nivel": "Media",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 18,
+    "nombre": "3er Año",
+    "nivel": "Media",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 19,
+    "nombre": "4to Año",
+    "nivel": "Media",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 20,
+    "nombre": "4to Año",
+    "nivel": "Media",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 21,
+    "nombre": "5to Año",
+    "nivel": "Media",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 22,
+    "nombre": "5to Año",
+    "nivel": "Media",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 23,
+    "nombre": "6to Año",
+    "nivel": "Téc. Medio",
+    "seccion": "A",
+    "anio_escolar": 2026,
+    "activo": 1
+   },
+   {
+    "id": 24,
+    "nombre": "6to Año",
+    "nivel": "Téc. Medio",
+    "seccion": "B",
+    "anio_escolar": 2026,
+    "activo": 1
+   }
+  ],
+  "estudiante_curso": [
+   {
+    "id": 1,
+    "estudiante_id": 5,
+    "curso_id": 1,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 2,
+    "estudiante_id": 6,
+    "curso_id": 2,
+    "anio_academico": 2026,
+    "activo": 0
+   },
+   {
+    "id": 3,
+    "estudiante_id": 7,
+    "curso_id": 3,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 4,
+    "estudiante_id": 8,
+    "curso_id": 2,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 5,
+    "estudiante_id": 9,
+    "curso_id": 6,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 6,
+    "estudiante_id": 15,
+    "curso_id": 16,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 7,
+    "estudiante_id": 5,
+    "curso_id": 1,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 8,
+    "estudiante_id": 6,
+    "curso_id": 2,
+    "anio_academico": 2026,
+    "activo": 0
+   },
+   {
+    "id": 9,
+    "estudiante_id": 7,
+    "curso_id": 3,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 10,
+    "estudiante_id": 8,
+    "curso_id": 4,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 11,
+    "estudiante_id": 9,
+    "curso_id": 5,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 12,
+    "estudiante_id": 5,
+    "curso_id": 1,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 13,
+    "estudiante_id": 6,
+    "curso_id": 2,
+    "anio_academico": 2026,
+    "activo": 0
+   },
+   {
+    "id": 14,
+    "estudiante_id": 7,
+    "curso_id": 3,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 15,
+    "estudiante_id": 8,
+    "curso_id": 4,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 16,
+    "estudiante_id": 9,
+    "curso_id": 5,
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 17,
+    "estudiante_id": 6,
+    "curso_id": 23,
+    "anio_academico": 2026,
+    "activo": 1
+   }
+  ],
+  "profesor_curso": [
+   {
+    "id": 3,
+    "profesor_id": 3,
+    "curso_id": 2,
+    "materia": "Castellano",
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 4,
+    "profesor_id": 3,
+    "curso_id": 3,
+    "materia": "Historia",
+    "anio_academico": 2026,
+    "activo": 1
+   },
+   {
+    "id": 5,
+    "profesor_id": 4,
+    "curso_id": 3,
+    "materia": "Inglés",
+    "anio_academico": 2026,
+    "activo": 1
+   }
+  ],
+  "horarios_clase": [
+   {
+    "id": 40,
+    "profesor_id": 3,
+    "curso_id": 1,
+    "dia_semana": "Martes",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 102",
+    "materia": "Inglés",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 41,
+    "profesor_id": 3,
+    "curso_id": 1,
+    "dia_semana": "Martes",
+    "hora_inicio": "10:00:00",
+    "hora_fin": "11:30:00",
+    "aula": "Aula 102",
+    "materia": "Ciencias",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 44,
+    "profesor_id": 4,
+    "curso_id": 1,
+    "dia_semana": "Jueves",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 103",
+    "materia": "Sociales",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 45,
+    "profesor_id": 4,
+    "curso_id": 1,
+    "dia_semana": "Jueves",
+    "hora_inicio": "10:00:00",
+    "hora_fin": "11:30:00",
+    "aula": "Aula 103",
+    "materia": "Educación Física",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 46,
+    "profesor_id": 3,
+    "curso_id": 1,
+    "dia_semana": "Viernes",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 102",
+    "materia": "Inglés",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 47,
+    "profesor_id": 3,
+    "curso_id": 1,
+    "dia_semana": "Viernes",
+    "hora_inicio": "10:00:00",
+    "hora_fin": "11:30:00",
+    "aula": "Aula 102",
+    "materia": "Ciencias",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 49,
+    "profesor_id": 3,
+    "curso_id": 2,
+    "dia_semana": "Lunes",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 201",
+    "materia": "Matemática",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 50,
+    "profesor_id": 3,
+    "curso_id": 2,
+    "dia_semana": "Martes",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 201",
+    "materia": "Castellano",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 51,
+    "profesor_id": 4,
+    "curso_id": 2,
+    "dia_semana": "Miércoles",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 202",
+    "materia": "Inglés",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 52,
+    "profesor_id": 4,
+    "curso_id": 2,
+    "dia_semana": "Jueves",
+    "hora_inicio": "08:00:00",
+    "hora_fin": "09:30:00",
+    "aula": "Aula 202",
+    "materia": "Ciencias",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 54,
+    "profesor_id": 4,
+    "curso_id": 3,
+    "dia_semana": "Lunes",
+    "hora_inicio": "10:00:00",
+    "hora_fin": "11:30:00",
+    "aula": "Aula 301",
+    "materia": "Matemática",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 55,
+    "profesor_id": 4,
+    "curso_id": 3,
+    "dia_semana": "Martes",
+    "hora_inicio": "10:00:00",
+    "hora_fin": "11:30:00",
+    "aula": "Aula 301",
+    "materia": "Castellano",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 58,
+    "profesor_id": 3,
+    "curso_id": 3,
+    "dia_semana": "Viernes",
+    "hora_inicio": "10:00:00",
+    "hora_fin": "11:30:00",
+    "aula": "Aula 301",
+    "materia": "Sociales",
+    "activo": 1,
+    "fecha_creacion": "2026-08-31T21:21:43.000Z"
+   },
+   {
+    "id": 59,
+    "profesor_id": 4,
+    "curso_id": 1,
+    "dia_semana": "Jueves",
+    "hora_inicio": "21:14:00",
+    "hora_fin": "13:14:00",
+    "aula": "2",
+    "materia": "Matematica",
+    "activo": 1,
+    "fecha_creacion": "2026-10-22T00:14:33.000Z"
+   }
+  ],
+  "asistencia": [
+   {
+    "id": 1,
+    "usuario_id": 1,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "08:00:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 3,
+    "usuario_id": 3,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "07:45:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 4,
+    "usuario_id": 4,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "08:15:00",
+    "hora_salida": null,
+    "estado": "tarde",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 5,
+    "usuario_id": 5,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "07:50:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 6,
+    "usuario_id": 6,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "07:55:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 7,
+    "usuario_id": 7,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "08:10:00",
+    "hora_salida": null,
+    "estado": "tarde",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 8,
+    "usuario_id": 8,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "07:40:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 9,
+    "usuario_id": 9,
+    "fecha": "2026-01-20T04:00:00.000Z",
+    "hora_entrada": "08:30:00",
+    "hora_salida": null,
+    "estado": "ausente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:52.000Z",
+    "fecha_registro": "2026-07-26T23:52:37.000Z"
+   },
+   {
+    "id": 10,
+    "usuario_id": 5,
+    "fecha": "2026-07-30T04:00:00.000Z",
+    "hora_entrada": "01:35:56",
+    "hora_salida": null,
+    "estado": "ausente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": "",
+    "modificado_por": null,
+    "fecha_modificacion": "2026-07-29T23:35:56.000Z",
+    "fecha_registro": "2026-07-29T23:35:56.000Z"
+   },
+   {
+    "id": 11,
+    "usuario_id": 5,
+    "fecha": "2026-08-31T04:00:00.000Z",
+    "hora_entrada": "07:50:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 12,
+    "usuario_id": 5,
+    "fecha": "2026-08-30T04:00:00.000Z",
+    "hora_entrada": "08:05:00",
+    "hora_salida": null,
+    "estado": "tarde",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 13,
+    "usuario_id": 5,
+    "fecha": "2026-08-29T04:00:00.000Z",
+    "hora_entrada": "07:45:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 14,
+    "usuario_id": 6,
+    "fecha": "2026-08-31T04:00:00.000Z",
+    "hora_entrada": "08:10:00",
+    "hora_salida": null,
+    "estado": "tarde",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 15,
+    "usuario_id": 6,
+    "fecha": "2026-08-30T04:00:00.000Z",
+    "hora_entrada": "07:55:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 16,
+    "usuario_id": 7,
+    "fecha": "2026-08-31T04:00:00.000Z",
+    "hora_entrada": "07:40:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 17,
+    "usuario_id": 7,
+    "fecha": "2026-08-29T04:00:00.000Z",
+    "hora_entrada": "08:30:00",
+    "hora_salida": null,
+    "estado": "ausente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 18,
+    "usuario_id": 8,
+    "fecha": "2026-08-31T04:00:00.000Z",
+    "hora_entrada": "07:50:00",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-08-31T21:02:37.000Z",
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 19,
+    "usuario_id": 5,
+    "fecha": "2026-10-30T04:00:00.000Z",
+    "hora_entrada": "00:00:00",
+    "hora_salida": null,
+    "estado": "Justificada",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-11-01T00:41:28.000Z",
+    "fecha_registro": "2026-10-30T22:11:22.000Z"
+   },
+   {
+    "id": 20,
+    "usuario_id": 7,
+    "fecha": "2026-11-01T04:00:00.000Z",
+    "hora_entrada": "17:51:36",
+    "hora_salida": null,
+    "estado": "presente",
+    "latitud": null,
+    "longitud": null,
+    "dispositivo": null,
+    "observaciones": null,
+    "modificado_por": null,
+    "fecha_modificacion": "2026-11-01T21:51:53.000Z",
+    "fecha_registro": "2026-11-01T21:51:36.000Z"
+   }
+  ],
+  "justificaciones": [
+   {
+    "id": 1,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-01-20T04:00:00.000Z",
+    "fecha_fin": "2026-01-22T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Consulta médica con el especialista. El estudiante presenta fiebre y dolor de garganta.",
+    "documento_url": "uploads/justificaciones/ejemplo_medico.jpg",
+    "archivo_nombre": "ejemplo_medico.jpg",
+    "archivo_tipo": "image/jpeg",
+    "archivo_tamano": 245760,
+    "estado": "",
+    "aprobado_por": 1,
+    "fecha_aprobacion": "2026-08-04T01:19:57.000Z",
+    "observaciones_director": "Recibid",
+    "dias_justificados": null,
+    "fecha_registro": "2026-07-29T23:47:09.000Z"
+   },
+   {
+    "id": 2,
+    "usuario_id": 6,
+    "fecha_inicio": "2026-01-15T04:00:00.000Z",
+    "fecha_fin": "2026-01-16T04:00:00.000Z",
+    "tipo_justificacion": "familiar",
+    "descripcion": "Fallecimiento de familiar cercano. Necesita acompañar a la familia en el sepelio.",
+    "documento_url": "uploads/justificaciones/ejemplo_familiar.pdf",
+    "archivo_nombre": "ejemplo_familiar.pdf",
+    "archivo_tipo": "application/pdf",
+    "archivo_tamano": 512000,
+    "estado": "aprobada",
+    "aprobado_por": 1,
+    "fecha_aprobacion": "2026-07-29T23:47:09.000Z",
+    "observaciones_director": "Justificación válida. Se aprueba la inasistencia.",
+    "dias_justificados": null,
+    "fecha_registro": "2026-07-29T23:47:09.000Z"
+   },
+   {
+    "id": 3,
+    "usuario_id": 7,
+    "fecha_inicio": "2026-01-25T04:00:00.000Z",
+    "fecha_fin": "2026-01-26T04:00:00.000Z",
+    "tipo_justificacion": "deportiva",
+    "descripcion": "Competencia deportiva regional de fútbol. El estudiante representa al colegio.",
+    "documento_url": "uploads/justificaciones/ejemplo_deportivo.png",
+    "archivo_nombre": "ejemplo_deportivo.png",
+    "archivo_tipo": "image/png",
+    "archivo_tamano": 102400,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-07-29T23:47:09.000Z"
+   },
+   {
+    "id": 4,
+    "usuario_id": 8,
+    "fecha_inicio": "2026-01-10T04:00:00.000Z",
+    "fecha_fin": "2026-01-10T04:00:00.000Z",
+    "tipo_justificacion": "personal",
+    "descripcion": "Asuntos personales. Necesita salir temprano.",
+    "documento_url": null,
+    "archivo_nombre": null,
+    "archivo_tipo": null,
+    "archivo_tamano": null,
+    "estado": "rechazada",
+    "aprobado_por": 1,
+    "fecha_aprobacion": "2026-07-29T23:47:09.000Z",
+    "observaciones_director": "No se justifica la inasistencia. El estudiante debe presentar un documento médico.",
+    "dias_justificados": null,
+    "fecha_registro": "2026-07-29T23:47:09.000Z"
+   },
+   {
+    "id": 5,
+    "usuario_id": 9,
+    "fecha_inicio": "2026-01-28T04:00:00.000Z",
+    "fecha_fin": "2026-01-29T04:00:00.000Z",
+    "tipo_justificacion": "academica",
+    "descripcion": "Participación en olimpiada de matemáticas. El estudiante fue seleccionado para representar al colegio.",
+    "documento_url": "uploads/justificaciones/ejemplo_academico.pdf",
+    "archivo_nombre": "ejemplo_academico.pdf",
+    "archivo_tipo": "application/pdf",
+    "archivo_tamano": 307200,
+    "estado": "revision",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-07-29T23:47:09.000Z"
+   },
+   {
+    "id": 6,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-02-01T04:00:00.000Z",
+    "fecha_fin": "2026-02-02T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Procedimiento dental. Presenta dolor y necesita atención odontológica.",
+    "documento_url": "uploads/justificaciones/ejemplo_dental.jpg",
+    "archivo_nombre": "ejemplo_dental.jpg",
+    "archivo_tipo": "image/jpeg",
+    "archivo_tamano": 180000,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-07-29T23:47:09.000Z"
+   },
+   {
+    "id": 7,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-28T04:00:00.000Z",
+    "fecha_fin": "2026-08-29T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Consulta médica",
+    "documento_url": null,
+    "archivo_nombre": null,
+    "archivo_tipo": null,
+    "archivo_tamano": null,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 8,
+    "usuario_id": 6,
+    "fecha_inicio": "2026-08-26T04:00:00.000Z",
+    "fecha_fin": "2026-08-27T04:00:00.000Z",
+    "tipo_justificacion": "familiar",
+    "descripcion": "Fallecimiento de familiar",
+    "documento_url": null,
+    "archivo_nombre": null,
+    "archivo_tipo": null,
+    "archivo_tamano": null,
+    "estado": "aprobada",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 9,
+    "usuario_id": 7,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-09-01T04:00:00.000Z",
+    "tipo_justificacion": "deportiva",
+    "descripcion": "Competencia deportiva",
+    "documento_url": null,
+    "archivo_nombre": null,
+    "archivo_tipo": null,
+    "archivo_tamano": null,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:02:37.000Z"
+   },
+   {
+    "id": 10,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-08-31T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Prueba de justificación desde script",
+    "documento_url": "uploads/justificaciones/test.pdf",
+    "archivo_nombre": "test.pdf",
+    "archivo_tipo": "application/pdf",
+    "archivo_tamano": 1024,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:54:36.000Z"
+   },
+   {
+    "id": 11,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-08-31T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Prueba de justificación desde script",
+    "documento_url": "uploads/justificaciones/test.pdf",
+    "archivo_nombre": "test.pdf",
+    "archivo_tipo": "application/pdf",
+    "archivo_tamano": 1024,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:58:30.000Z"
+   },
+   {
+    "id": 12,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-08-31T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Prueba de justificación desde script",
+    "documento_url": "uploads/justificaciones/test.pdf",
+    "archivo_nombre": "test.pdf",
+    "archivo_tipo": "application/pdf",
+    "archivo_tamano": 1024,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:59:23.000Z"
+   },
+   {
+    "id": 13,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-08-31T04:00:00.000Z",
+    "tipo_justificacion": "medica",
+    "descripcion": "Prueba de justificación desde script",
+    "documento_url": "uploads/justificaciones/test.pdf",
+    "archivo_nombre": "test.pdf",
+    "archivo_tipo": "application/pdf",
+    "archivo_tamano": 1024,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T21:59:23.000Z"
+   },
+   {
+    "id": 14,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-08-31T04:00:00.000Z",
+    "tipo_justificacion": "personal",
+    "descripcion": "xdd",
+    "documento_url": "uploads/justificaciones/1788216202_6a96038a8560f.png",
+    "archivo_nombre": "1788216202_6a96038a8560f.png",
+    "archivo_tipo": "image/png",
+    "archivo_tamano": 70450,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T22:43:22.000Z"
+   },
+   {
+    "id": 15,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-08-31T04:00:00.000Z",
+    "fecha_fin": "2026-08-31T04:00:00.000Z",
+    "tipo_justificacion": "familiar",
+    "descripcion": "rd",
+    "documento_url": "uploads/justificaciones/1788216213_6a960395f01c5.png",
+    "archivo_nombre": "1788216213_6a960395f01c5.png",
+    "archivo_tipo": "image/png",
+    "archivo_tamano": 85988,
+    "estado": "pendiente",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": null,
+    "dias_justificados": null,
+    "fecha_registro": "2026-08-31T22:43:33.000Z"
+   },
+   {
+    "id": 17,
+    "usuario_id": 5,
+    "fecha_inicio": "2026-10-30T04:00:00.000Z",
+    "fecha_fin": "2026-10-30T04:00:00.000Z",
+    "tipo_justificacion": "otra",
+    "descripcion": "[CARGADA POR PROFESOR] no pude venir",
+    "documento_url": null,
+    "archivo_nombre": null,
+    "archivo_tipo": null,
+    "archivo_tamano": null,
+    "estado": "aprobada",
+    "aprobado_por": null,
+    "fecha_aprobacion": null,
+    "observaciones_director": "fino",
+    "dias_justificados": null,
+    "fecha_registro": "2026-10-30T23:33:42.000Z"
+   }
+  ],
+  "calendario_academico": [
+   {
+    "id": 3,
+    "titulo": "Día del Maestro",
+    "descripcion": "Celebración",
+    "fecha_inicio": "2026-01-15T04:00:00.000Z",
+    "fecha_fin": "2026-01-15T04:00:00.000Z",
+    "tipo_evento": "asueto",
+    "afecta_asistencia": 1,
+    "color_evento": "#FF0000",
+    "creado_por": 1
+   },
+   {
+    "id": 9,
+    "titulo": "NATALICIO",
+    "descripcion": "ddd",
+    "fecha_inicio": "2026-11-01T04:00:00.000Z",
+    "fecha_fin": "2026-11-01T04:00:00.000Z",
+    "tipo_evento": "feriado",
+    "afecta_asistencia": 1,
+    "color_evento": "#007aff",
+    "creado_por": 1
+   }
+  ],
+  "configuracion_sistema": [
+   {
+    "id": 1,
+    "clave": "hora_entrada",
+    "valor": "08:00",
+    "descripcion": "Hora límite de entrada"
+   },
+   {
+    "id": 2,
+    "clave": "porcentaje_asistencia_minimo",
+    "valor": "85",
+    "descripcion": "Porcentaje mínimo de asistencia"
+   },
+   {
+    "id": 3,
+    "clave": "dias_maximos_justificar",
+    "valor": "3",
+    "descripcion": "Días máximos para justificar"
+   },
+   {
+    "id": 4,
+    "clave": "palabra",
+    "valor": "ZORRA",
+    "descripcion": null
+   },
+   {
+    "id": 5,
+    "clave": "nivel",
+    "valor": "muy_grave",
+    "descripcion": null
+   },
+   {
+    "id": 6,
+    "clave": "reemplazo",
+    "valor": "*****",
+    "descripcion": null
+   },
+   {
+    "id": 7,
+    "clave": "agregar_groseria",
+    "valor": "",
+    "descripcion": null
+   },
+   {
+    "id": 8,
+    "clave": "notificaciones_activas",
+    "valor": "true",
+    "descripcion": null
+   },
+   {
+    "id": 9,
+    "clave": "permitir_edicion_asistencia",
+    "valor": "true",
+    "descripcion": null
+   },
+   {
+    "id": 10,
+    "clave": "filtro_groserias_activo",
+    "valor": "true",
+    "descripcion": null
+   }
+  ],
+  "filtro_groserias": [
+   {
+    "id": 1,
+    "palabra": "mierda",
+    "nivel": "grave",
+    "reemplazo": "*****",
+    "activo": 1
+   },
+   {
+    "id": 2,
+    "palabra": "verga",
+    "nivel": "grave",
+    "reemplazo": "*****",
+    "activo": 1
+   },
+   {
+    "id": 3,
+    "palabra": "coño",
+    "nivel": "grave",
+    "reemplazo": "****",
+    "activo": 1
+   },
+   {
+    "id": 4,
+    "palabra": "carajo",
+    "nivel": "grave",
+    "reemplazo": "******",
+    "activo": 1
+   },
+   {
+    "id": 5,
+    "palabra": "puta",
+    "nivel": "grave",
+    "reemplazo": "****",
+    "activo": 1
+   },
+   {
+    "id": 6,
+    "palabra": "idiota",
+    "nivel": "moderado",
+    "reemplazo": "******",
+    "activo": 1
+   },
+   {
+    "id": 7,
+    "palabra": "estupido",
+    "nivel": "moderado",
+    "reemplazo": "********",
+    "activo": 1
+   },
+   {
+    "id": 8,
+    "palabra": "tonto",
+    "nivel": "leve",
+    "reemplazo": "*****",
+    "activo": 1
+   },
+   {
+    "id": 9,
+    "palabra": "bobo",
+    "nivel": "leve",
+    "reemplazo": "****",
+    "activo": 1
+   },
+   {
+    "id": 10,
+    "palabra": "pendejo",
+    "nivel": "moderado",
+    "reemplazo": "*******",
+    "activo": 1
+   },
+   {
+    "id": 11,
+    "palabra": "maldito",
+    "nivel": "moderado",
+    "reemplazo": "***",
+    "activo": 1
+   }
+  ]
+ }
+}
